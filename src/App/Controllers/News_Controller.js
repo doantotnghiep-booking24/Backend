@@ -20,7 +20,7 @@ class Featured_Location {
             let count = 0
             let filesData = req.files
             let { Name, Title, Content, Image, Cretate_At } = req.body
-            Cretate_At = new Date()
+            Cretate_At = new Date();
             for (let i = 0; i < filesData.length; i++) {
                 Data_Image.push(filesData[i])
                 Data_rm.push(filesData[i].filename)
