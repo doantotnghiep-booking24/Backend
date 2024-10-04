@@ -3,12 +3,13 @@ import Tour from '../Models/Tour.js';
 import { ObjectId } from 'mongodb';
 class Tour_Controller {
     Create_Tour(req, res, next) {
-        const { id_Category, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Outstanding_Tour, Start_Tour, End_Tour, total_Date } = req.body
+        const { id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, Departure_Date, End_Date, Departure_Time, Time_To_Come, total_Date } = req.body
+
         Connection.connect().then(async (db) => {
             try {
-                const Create_Tour = new Tour(undefined, id_Category, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Outstanding_Tour, Start_Tour, End_Tour, total_Date)
+                const Create_Tour = new Tour(undefined, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, Departure_Date, End_Date, Departure_Time, Time_To_Come, total_Date)
                 const result = await Create_Tour.CreateTour(db)
-                if (result) return res.status(200).json({ message: 'Created Tour Success' })
+                if (result) return res.status(200).send({ message: 'Created Tour Success' })
             } catch (error) {
                 console.log(error)
             }
@@ -20,7 +21,7 @@ class Tour_Controller {
             try {
                 const AllTour = await Tour.ShowAll(db, parseInt(page), parseInt(limit))
                 if (AllTour) {
-                    return res.status(200).json({ Tours: AllTour })
+                    return res.status(200).send({ Tours: AllTour })
                 }
             } catch (error) {
                 console.log(error);
@@ -33,7 +34,7 @@ class Tour_Controller {
             try {
                 const Delete_Tour = await Tour.Delete(db, new ObjectId(id))
                 if (Delete_Tour) {
-                    return res.status(200).json({ message: "Delete Success" })
+                    return res.status(200).send({ message: "Delete Success" })
                 }
             } catch (error) {
                 console.log(error);
@@ -42,13 +43,13 @@ class Tour_Controller {
     }
     UpdateTour(req, res, next) {
         const { id } = req.params
-        const { id_Category, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Outstanding_Tour, Start_Tour, End_Tour, total_Date } = req.body
+        const { id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, Departure_Date, End_Date, Departure_Time, Time_To_Come, total_Date } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const Update_Tour = new Tour(undefined, id_Category, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Outstanding_Tour, Start_Tour, End_Tour, total_Date)
+                const Update_Tour = new Tour(undefined, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, Departure_Date, End_Date, Departure_Time, Time_To_Come, total_Date)
                 if (Update_Tour) {
                     const result = await Update_Tour.UpdateTour(db, new ObjectId(id))
-                    if (result) return res.status(200).json({ message: "Update Success" })
+                    if (result) return res.status(200).send({ message: "Update Success" })
                 }
             } catch (error) {
                 console.log(error);
@@ -60,7 +61,7 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const resultSearch = await Tour.Search(db, NameSearch, parseInt(PriceSearch), parseInt(page), parseInt(limit))
-                if (resultSearch) return res.status(200).json({ search: resultSearch })
+                if (resultSearch) return res.status(200).send({ search: resultSearch })
             } catch (error) {
                 console.log(err)
             }
@@ -71,11 +72,12 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const detailTour = await Tour.Detail(db, new ObjectId(id))
-                if (detailTour) return res.status(200).json({ detailTour: detailTour })
+                if (detailTour) return res.status(200).send({ detailTour: detailTour })
+
             } catch (error) {
                 console.log(error);
             }
         })
     }
 }
-export default new Tour_Controller()    
+export default new Tour_Controller()

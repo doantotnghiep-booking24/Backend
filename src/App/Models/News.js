@@ -1,0 +1,73 @@
+import { v2 as cloudinary } from 'cloudinary';
+class News {
+    constructor(_id, Name, Title, Content, Image, Cretate_At) {
+        this._id = _id
+        this.Name = Name
+        this.Title = Title
+        this.Content = Content
+        this.Image = Image
+        this.Cretate_At = Cretate_At
+    }
+    static async getAll(db) {
+        try {
+            const result = await db.collection('News')
+                .find({})
+                .toArray()
+            return result
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
+    async Create(db) {
+        try {
+            const Create_News = db.collection('News').insertOne(this)
+            return Create_News
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
+    async Update(db, id) {
+        try {
+            const Update = db.collection('News')
+                .updateOne({ _id: id }, {
+                    $set: {
+                        Name: this.Name,
+                        Title: this.Title,
+                        Content: this.Content,
+                        Image: this.Image,
+                        Cretate_At: this.Cretate_At
+                    }
+                })
+            return Update
+        } catch (error) {
+
+        }
+    }
+    static async Delete(db, id) {
+        try {
+            let filenameRm
+            let data_filename = []
+            const Data_ImageRm = await db.collection('News').find({ _id: id }).toArray()
+            if (Data_ImageRm) {
+                const Delete = await db.collection('News').deleteOne({ _id: id })
+                if (Delete) {
+                    Data_ImageRm.map(data_new => {
+                        filenameRm = data_new.Image
+                    })
+                    for (let i = 0; i < filenameRm.length; i++) {
+                        cloudinary.api.delete_resources(filenameRm[i].filename, (error, result) => {
+                         console.log(result);
+                        })
+                    }
+                }
+                return Delete ? true : false
+            }
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+}
+export default News

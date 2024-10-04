@@ -6,7 +6,7 @@ class Categories_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllCategories = await Categories.getAll(db)
-                if (AllCategories) return res.status(200).json({ Categories: AllCategories })
+                if (AllCategories) return res.status(200).send({ Categories: AllCategories })
             } catch (error) {
                 console.log(error);
             }
@@ -17,7 +17,7 @@ class Categories_Controller {
         Connection.connect().then(async (db) => {
             const CreateCategory = new Categories(undefined, NameCate)
             const result = await CreateCategory.Create(db)
-            if (result) return res.status(200).json({ message: 'Create Success' })
+            if (result) return res.status(200).send({ message: 'Create Success' })
         })
     }
     UpdateCategory(req, res, next) {
@@ -27,7 +27,7 @@ class Categories_Controller {
             try {
                 const UpdateCategory = new Categories(undefined, NameCate)
                 const result = await UpdateCategory.Update(db, new ObjectId(id))
-                if (result) return res.status(200).json({ message: 'Update Success' })
+                if (result) return res.status(200).send({ message: 'Update Success' })
             } catch (error) {
                 console.log(error);
             }
@@ -38,7 +38,7 @@ class Categories_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const DeleteCategory = Categories.Delete(db, new ObjectId(id))
-                if (DeleteCategory) return res.status(200).json({ message: 'Delete Success' })
+                if (DeleteCategory) return res.status(200).send({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }

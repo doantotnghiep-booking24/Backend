@@ -9,13 +9,13 @@ import "dotenv/config.js";
 class User_Controller {
     Register(req, res, next) {
         const { Name, Email, Password } = req.body
-        const role = 'User'
+        const role = 'User' || 'user'
         const reg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
         const isCheckEmail = reg.test(Email)
         if (Name === "" || !isCheckEmail || Password === "") {
             return res
                 .status(400)
-                .send({ errorMessage: 'Please enter complete infomation' });
+                .send({ errorMessage: 'Please enter complete information' });
         }
         Connection.connect().then(async (db) => {
             try {
@@ -74,7 +74,7 @@ class User_Controller {
                                     maxAge: 3600000, // expired time, should set to match token expiry (1h)
                                 });
                             }
-                            res.status(200).json({ ...find_user, AccessToken, RefeshToken })
+                            res.status(200).send({ ...find_user, AccessToken, RefeshToken })
                         }
                     }
                 })
@@ -83,7 +83,6 @@ class User_Controller {
             }
         })
     }
-
     RefeshToken(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
@@ -91,17 +90,17 @@ class User_Controller {
                 if (RefreshTokens) {
                     jwt.verify(RefreshTokens, process.env.SECRET_KEY_REFESH_TOKEN, (err, user) => {
                         if (err) {
-                            return res.status(401).json({ message: "The user is not authentication" })
+                            return res.status(401).send({ message: "The user is not authentication" })
                         }
                         if (user) {
                             const NewAccessToken = Auth.createAccessToken(user.name, user.email, user.role)
-                            return res.status(200).json({ user, NewAccessToken: NewAccessToken })
+                            return res.status(200).send({ user, NewAccessToken: NewAccessToken })
                         } else {
-                            return res.status(401).json({ message: "The user is not authentication" })
+                            return res.status(401).send({ message: "The user is not authentication" })
                         }
                     })
                 } else {
-                    return res.json({ message: "The refesh token is not valid" })
+                    return res.send({ message: "The refesh token is not valid" })
                 }
             } catch (error) {
                 console.log(error);

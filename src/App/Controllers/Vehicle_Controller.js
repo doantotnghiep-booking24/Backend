@@ -6,7 +6,7 @@ class Vehicle_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const GetVehicle = await Vehicle.GetVehicle(db)
-                if (GetVehicle) return res.status(200).json({ Vehicle: GetVehicle })
+                if (GetVehicle) return res.status(200).send({ Vehicle: GetVehicle })
             } catch (error) {
                 console.log(error);
             }
@@ -20,9 +20,9 @@ class Vehicle_Controller {
                 if (!CheckVehicle) {
                     const Create = new Vehicle(undefined, Name_Vehicle)
                     const result = await Create.CreateVehicle(db)
-                    if (result) return res.status(200).json({ message: 'Created Success' })
+                    if (result) return res.status(200).send({ message: 'Created Success' })
                 } else {
-                    return res.status(400).json({ message: 'Vehicle is already exist' })
+                    return res.status(400).send({ message: 'Vehicle is already exist' })
                 }
             } catch (error) {
                 console.log(error);
@@ -36,7 +36,7 @@ class Vehicle_Controller {
             try {
                 const Update = new Vehicle(undefined, Name_Vehicle)
                 const result = await Update.UpdateVehicle(db, new ObjectId(id))
-                if (result) return res.status(200).json({ message: 'Updated Success' })
+                if (result) return res.status(200).send({ message: 'Updated Success' })
             } catch (error) {
                 console.log(error);
             }
@@ -47,7 +47,7 @@ class Vehicle_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const Delete = Vehicle.DeleteVehicle(db, new ObjectId(id))
-                if (Delete) return res.status(200).json({ message: 'Deleted Success' })
+                if (Delete) return res.status(200).send({ message: 'Deleted Success' })
             } catch (error) {
                 console.log(error);
             }

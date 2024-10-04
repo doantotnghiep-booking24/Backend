@@ -3,6 +3,7 @@ class Service {
         this._id = _id
         this.NameService = NameService
     }
+    
    static async GetServices(db) {
         try {
             const result_GetServices = await db.collection('Services')
