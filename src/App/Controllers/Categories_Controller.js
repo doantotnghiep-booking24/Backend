@@ -15,9 +15,14 @@ class Categories_Controller {
     CreateCategory(req, res, next) {
         const { NameCate } = req.body
         Connection.connect().then(async (db) => {
-            const CreateCategory = new Categories(undefined, NameCate)
-            const result = await CreateCategory.Create(db)
-            if (result) return res.status(200).send({ message: 'Create Success' })
+            const CheckIsCategory = await Categories.FindCategory(db, NameCate)
+            if (!CheckIsCategory) {
+                const CreateCategory = new Categories(undefined, NameCate)
+                const result = await CreateCategory.Create(db)
+                if (result) return res.status(200).send({ message: 'Create Success' })
+            } else {
+                return res.status(400).send({ message: 'Name Category is already exist' })
+            }
         })
     }
     UpdateCategory(req, res, next) {

@@ -1,11 +1,11 @@
-class Categories {
-    constructor(_id, Name_Cate) {
+class TypeTour {
+    constructor(_id, Name_Type) {
         this._id = _id
-        this.Name_Cate = Name_Cate
+        this.Name_Type = Name_Type
     }
     static async getAll(db) {
         try {
-            const result = await db.collection('Categories')
+            const result = await db.collection('TypeTour')
                 .find({})
                 .toArray()
             return result
@@ -14,9 +14,9 @@ class Categories {
             throw (error)
         }
     }
-    static async FindCategory (db,Name_Cate) {
+    static async FindTypeTour (db,Name_Type) {
         try {
-            const resultCheck = await db.collection('Categories').findOne({Name_Cate : Name_Cate})
+            const resultCheck = await db.collection('TypeTour').findOne({Name_Type : Name_Type})
             return resultCheck ? true : false
         } catch (error) {
             console.log(error);
@@ -25,8 +25,8 @@ class Categories {
     }
     async Create(db) {
         try {
-            const CreateCate = db.collection('Categories').insertOne(this)
-            return CreateCate
+            const CreateType = db.collection('TypeTour').insertOne(this)
+            return CreateType
         } catch (error) {
             console.log(error);
             throw (error)
@@ -34,10 +34,10 @@ class Categories {
     }
     async Update(db, id) {
         try {
-            const Update = db.collection('Categories')
+            const Update = db.collection('TypeTour')
                 .updateOne({ _id: id }, {
                     $set: {
-                        Name_Cate: this.Name_Cate
+                        Name_Type: this.Name_Type
                     }
                 })
                 return Update
@@ -47,7 +47,7 @@ class Categories {
     }
     static async Delete(db, id) {
         try {
-            const Delete = await db.collection('Categories').deleteOne({ _id: id })
+            const Delete = await db.collection('TypeTour').deleteOne({ _id: id })
             return Delete
         } catch (error) {
             console.log(error);
@@ -55,4 +55,4 @@ class Categories {
         }
     }
 }
-export default Categories
+export default TypeTour

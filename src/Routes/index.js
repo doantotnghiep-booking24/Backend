@@ -5,10 +5,12 @@ import Service from './Service.Route.js'
 import Vehicle from './Vehicle.Route.js'
 import Featured_Location from './Featured_Location.js'
 import News from './News.Route.js'
+import TypeTour from './TypeTour.Route.js'
 const Route = (app) => {
     app.use('/V1/Tours', Tour)
     app.use('/V2/Category', Categories)
     app.use('/V2/Featured_Location',Featured_Location)
+    app.use('/V2/TypeTour',TypeTour)
     app.use('/Services',Service)
     app.use('/Vehicles',Vehicle)
     app.use('/User', User)

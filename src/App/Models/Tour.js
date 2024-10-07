@@ -1,6 +1,7 @@
 class Tour {
-    constructor(_id, id_Category, id_Service, id_Featured_Location,id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, Departure_Date, End_Date, Departure_Time, Time_To_Come, total_Date) {
+    constructor(_id, id_Schedule_Travel, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date) {
         this._id = _id
+        this.id_Schedule_Travel = id_Schedule_Travel
         this.id_Category = id_Category
         this.id_Service = id_Service
         this.id_Featured_Location = id_Featured_Location
@@ -12,10 +13,6 @@ class Tour {
         this.Description_Tour = Description_Tour
         this.Start_Tour = Start_Tour
         this.End_Tour = End_Tour
-        this.Departure_Date = Departure_Date
-        this.End_Date = End_Date
-        this.Departure_Time = Departure_Time
-        this.Time_To_Come = Time_To_Come
         this.total_Date = total_Date
     }
     async CreateTour(db) {
@@ -38,7 +35,7 @@ class Tour {
                 .sort({ Price_Tour: 1 })
                 .toArray()
             const totalItems = await db.collection('Tours').countDocuments({})
-            const response = ResultGetTours.map(item => new Tour(item._id, item.id_Category, item.id_Service, item.id_Featured_Location,item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.Departure_Date, item.End_Date, item.Departure_Time, item.Time_To_Come, item.total_Date))
+            const response = ResultGetTours.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Category, item.id_Service, item.id_Featured_Location, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date))
             return {
                 totalItems: totalItems,
                 Page: page,
@@ -75,11 +72,7 @@ class Tour {
                             Description_Tour: this.Description_Tour,
                             Start_Tour: this.Start_Tour,
                             End_Tour: this.End_Tour,
-                            Departure_Date : this.Departure_Date,
-                            End_Date : this.End_Date,
-                            Departure_Time : this.Departure_Time,
-                            Time_To_Come : this.Time_To_Come,
-                            total_Date : this.total_Date,
+                            total_Date: this.total_Date,
                         }
                     }
                 )

@@ -1,8 +1,9 @@
 class Featured_Location {
-    constructor(_id, Name_Location, Address_Location, Image_Location, Type_Location, Nationnal, City_Location) {
+    constructor(_id, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location) {
         this._id = _id
         this.Name_Location = Name_Location
         this.Address_Location = Address_Location
+        this.Description = Description
         this.Image_Location = Image_Location
         this.Type_Location = Type_Location
         this.Nationnal = Nationnal
@@ -34,11 +35,12 @@ class Featured_Location {
                 .updateOne({ _id: id }, {
                     $set: {
                         Name_Location: this.Name_Location,
-                        Address_Location : this.Address_Location,
-                        Image_Location : this.Image_Location,
-                        Type_Location : this.Type_Location,
-                        Nationnal : this.Nationnal,
-                        City_Location : this.City_Location
+                        Address_Location: this.Address_Location,
+                        Description: this.Description,
+                        Image_Location: this.Image_Location,
+                        Type_Location: this.Type_Location,
+                        Nationnal: this.Nationnal,
+                        City_Location: this.City_Location
                     }
                 })
             return Update

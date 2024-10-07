@@ -22,7 +22,7 @@ class News {
     async Create(db) {
         try {
             const Create_News = db.collection('News').insertOne(this)
-            return Create_News
+            return Create_News ? true : false
         } catch (error) {
             console.log(error);
             throw (error)
@@ -40,7 +40,7 @@ class News {
                         Cretate_At: this.Cretate_At
                     }
                 })
-            return Update
+            return Update ? true : false
         } catch (error) {
 
         }
@@ -48,7 +48,6 @@ class News {
     static async Delete(db, id) {
         try {
             let filenameRm
-            let data_filename = []
             const Data_ImageRm = await db.collection('News').find({ _id: id }).toArray()
             if (Data_ImageRm) {
                 const Delete = await db.collection('News').deleteOne({ _id: id })
