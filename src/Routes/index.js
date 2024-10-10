@@ -5,6 +5,7 @@ import Service from './Service.Route.js'
 import Schedule from './Schedule_Travel.Route.js'
 import Featured_Location from './Featured_Location.js'
 import News from './News.Route.js'
+import Voucher from './Voucher.Route.js' 
 import TypeTour from './TypeTour.Route.js'
 const Route = (app) => {
     app.use('/V1/Tours', Tour)
@@ -13,6 +14,7 @@ const Route = (app) => {
     app.use('/V2/TypeTour',TypeTour)
     app.use('/Services',Service)
     app.use('/Schedules',Schedule)
+    app.use('/Vouchers',Voucher)
     app.use('/User', User)
     app.use('/News',News)
     app.use('/', Tour)
