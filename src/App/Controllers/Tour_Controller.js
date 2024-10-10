@@ -124,7 +124,6 @@ class Tour_Controller {
             try {
                 const detailTour = await Tour.Detail(db, new ObjectId(id))
                 if (detailTour) return res.status(200).send({ detailTour: detailTour })
-
             } catch (error) {
                 console.log(error);
             }

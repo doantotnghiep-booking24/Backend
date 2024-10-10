@@ -17,14 +17,14 @@ class Featured_Location {
         let Data_Image = []
         let Data_rm = []
         let filesData = req.files
-        let { Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location } = req.body
+        let { Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour } = req.body
         Connection.connect().then(async (db) => {
             for (let i = 0; i < filesData.length; i++) {
                 Data_Image.push(filesData[i])
                 Data_rm.push(filesData[i].filename)
             }
             Image_Location = Data_Image
-            const CreateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location)
+            const CreateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour)
             const result = await CreateFeatured.Create(db)
             if (!result) {
                 if (filesData) {
@@ -41,7 +41,7 @@ class Featured_Location {
     }
     UpdateFeatured_Location(req, res, next) {
         const { id } = req.params
-        let { Name_Location, Address_Location,Description, Image_Location, Type_Location, Nationnal, City_Location } = req.body
+        let { Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour } = req.body
         let Data_rm = []
         let Data_Image = []
         let Data_Path = []
@@ -58,7 +58,7 @@ class Featured_Location {
                     count++
                 }
                 Image_Location = Data_Image
-                const UpdateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location,Description, Image_Location, Type_Location, Nationnal, City_Location)
+                const UpdateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour)
                 const result = await UpdateFeatured.Update(db, new ObjectId(id))
                 if (!result) {
                     if (filesData) {

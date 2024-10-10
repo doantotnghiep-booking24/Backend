@@ -1,5 +1,5 @@
 class Featured_Location {
-    constructor(_id, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location) {
+    constructor(_id, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location,id_tour) {
         this._id = _id
         this.Name_Location = Name_Location
         this.Address_Location = Address_Location
@@ -8,6 +8,7 @@ class Featured_Location {
         this.Type_Location = Type_Location
         this.Nationnal = Nationnal
         this.City_Location = City_Location
+        this.id_tour = id_tour
     }
     static async getAll(db) {
         try {
@@ -40,7 +41,8 @@ class Featured_Location {
                         Image_Location: this.Image_Location,
                         Type_Location: this.Type_Location,
                         Nationnal: this.Nationnal,
-                        City_Location: this.City_Location
+                        City_Location: this.City_Location,
+                        id_tour : this.id_tour
                     }
                 })
             return Update
