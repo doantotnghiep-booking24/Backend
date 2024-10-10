@@ -1,11 +1,9 @@
 class Schedule_Travel {
-    constructor(_id, Name_Schedule, Departure_Time, Location, means_of_transport, Work) {
+    constructor(_id, Departure_Time, Location, means_of_transport) {
         this._id = _id
-        this.Name_Schedule = Name_Schedule
         this.Departure_Time = Departure_Time
         this.Location = Location
         this.means_of_transport = means_of_transport
-        this.Work = Work
     }
     static async GetSchedule_Travel(db) {
         try {
@@ -38,8 +36,6 @@ class Schedule_Travel {
                         Departure_Time: this.Departure_Time,
                         Location: this.Location,
                         means_of_transport: this.means_of_transport,
-                        Work: this.Work,
-                        Name_Schedule: this.Name_Schedule
                     }
                 }
             )
