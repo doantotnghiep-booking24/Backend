@@ -82,9 +82,9 @@ class Tour_Controller {
                     count++
                 }
                 Image_Tour = Data_Image
-                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount , Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Update_Tour = new Tour(undefined, new ObjectId(id_Schedule_Travel),new ObjectId(id_Voucher), new Object(id_Category), new ObjectId(id_Type_Tour), Name_Tour, parseInt(Price_Tour), After_Discount , Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const result = await Update_Tour.UpdateTour(db, new ObjectId(id))
                 if (Update_Tour) {
-                    const result = await Update_Tour.UpdateTour(db, new ObjectId(id))
                     if (!result) {
                         if (filesData) {
                             cloudinary.api.delete_resources(Data_rm[count], (error, result) => {

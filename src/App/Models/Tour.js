@@ -104,6 +104,7 @@ class Tour {
                     }
                 )
                 return result_Update
+                
             }
         } catch (error) {
             console.log(error);
