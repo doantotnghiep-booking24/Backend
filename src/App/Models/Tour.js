@@ -85,12 +85,15 @@ class Tour {
         try {
             if (id) {
                 const result_Update = await db.collection('Tours').updateOne(
-                    { _id: id },
                     {
                         $set: {
+                            id_Schedule_Travel: this.id_Schedule_Travel,
+                            id_Voucher: this.id_Voucher,
+                            id_Category: this.id_Category,
+                            id_Type_Tour: this.id_Type_Tour,
                             Name_Tour: this.Name_Tour,
                             Price_Tour: this.Price_Tour,
-                            After_Discount : this.After_Discount,
+                            After_Discount: this.After_Discount,
                             Image_Tour: this.Image_Tour,
                             Title_Tour: this.Title_Tour,
                             Description_Tour: this.Description_Tour,

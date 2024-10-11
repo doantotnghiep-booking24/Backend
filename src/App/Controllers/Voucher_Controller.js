@@ -28,7 +28,7 @@ class Voucher_Controller {
         Connection.connect().then(async (db) => {
             const CheckIsVoucher = await Voucher.FindVoucher(db, Code_Voucher)
             if (!CheckIsVoucher) {
-                const CreateVoucher = new Voucher(undefined, Code_Voucher, Description, parseInt(Discount), Type, Start_Date, End_Date, Max_Usage, Condition,isexpired)
+                const CreateVoucher = new Voucher(undefined, Code_Voucher, Description, parseInt(Discount), Type, Start_Date, End_Date, Max_Usage, Condition, isexpired)
                 const result = await CreateVoucher.Create(db)
                 if (result) return res.status(200).send({ message: 'Create Success' })
             } else {

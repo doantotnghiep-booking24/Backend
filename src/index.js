@@ -11,7 +11,7 @@ app.use(cors({
 }))
 Connection.connect().then(async (db) => {
     const CheckisExpired = await db.collection('Voucher').find({}).toArray()
-    console.log(CheckisExpired)
+    console.log(CheckisExpired);
     
 })
 app.use(express.json({ limit: '1000mb' }));
