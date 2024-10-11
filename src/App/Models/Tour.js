@@ -84,7 +84,7 @@ class Tour {
     async UpdateTour(db, id) {
         try {
             if (id) {
-                const result_Update = await db.collection('Tours').updateOne(
+                const result_Update = await db.collection('Tours').updateOne({_id : id},
                     {
                         $set: {
                             id_Schedule_Travel: this.id_Schedule_Travel,
