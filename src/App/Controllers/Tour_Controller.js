@@ -69,9 +69,12 @@ class Tour_Controller {
         let filesData = req.files
         let count = 0
         let filenameUpd
+        let After_Discount
         Connection.connect().then(async (db) => {
             try {
                 const filterNews = await db.collection('Tours').find({ _id: new ObjectId(id) }).toArray()
+                console.log(filterNews);
+                
                 for (let i = 0; i < filesData.length; i++) {
                     Data_Image.push(filesData[i])
                     Data_rm.push(filesData[i].filename)
@@ -79,7 +82,7 @@ class Tour_Controller {
                     count++
                 }
                 Image_Tour = Data_Image
-                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount , Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
                 if (Update_Tour) {
                     const result = await Update_Tour.UpdateTour(db, new ObjectId(id))
                     if (!result) {
@@ -94,6 +97,8 @@ class Tour_Controller {
                         filterNews.map(data_new => {
                             filenameUpd = data_new.Image_Tour
                         })
+                        // console.log(filenameUpd);
+                        
                         for (let i = 0; i < filenameUpd.length; i++) {
                             cloudinary.api.delete_resources(filenameUpd[i].filename, (error, result) => {
                                 console.log('error', error);

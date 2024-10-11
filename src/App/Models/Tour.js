@@ -31,7 +31,6 @@ class Tour {
     static async ShowAll(db, page, limit) {
         try {
             const getVoucher = await db.collection('Voucher').find({}).toArray()
-            const getCate = await db.collection('Categories').find({}).toArray()
             const getTour = await db.collection('Tours').find({}).toArray()
             let after_discout = 0
             let result
@@ -91,6 +90,7 @@ class Tour {
                         $set: {
                             Name_Tour: this.Name_Tour,
                             Price_Tour: this.Price_Tour,
+                            After_Discount : this.After_Discount,
                             Image_Tour: this.Image_Tour,
                             Title_Tour: this.Title_Tour,
                             Description_Tour: this.Description_Tour,
