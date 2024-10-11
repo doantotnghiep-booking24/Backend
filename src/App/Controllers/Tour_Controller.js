@@ -7,7 +7,8 @@ class Tour_Controller {
         let Data_Image = []
         let Data_rm = []
         let filesData = req.files
-        let { id_Schedule_Travel, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date } = req.body
+        let After_Discount = 0
+        let { id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date } = req.body
         Connection.connect().then(async (db) => {
             try {
                 for (let i = 0; i < filesData.length; i++) {
@@ -15,7 +16,7 @@ class Tour_Controller {
                     Data_rm.push(filesData[i].filename)
                 }
                 Image_Tour = Data_Image
-                const Create_Tour = new Tour(undefined, id_Schedule_Travel, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Create_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount , Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
                 const result = await Create_Tour.CreateTour(db)
                 if (!result) {
                     if (filesData) {
@@ -61,7 +62,7 @@ class Tour_Controller {
     }
     UpdateTour(req, res, next) {
         const { id } = req.params
-        let { id_Schedule_Travel, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date } = req.body
+        let { id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date } = req.body
         let Data_rm = []
         let Data_Image = []
         let Data_Path = []
@@ -78,7 +79,7 @@ class Tour_Controller {
                     count++
                 }
                 Image_Tour = Data_Image
-                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
                 if (Update_Tour) {
                     const result = await Update_Tour.UpdateTour(db, new ObjectId(id))
                     if (!result) {
