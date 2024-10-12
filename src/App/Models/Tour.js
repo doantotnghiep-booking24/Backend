@@ -30,26 +30,6 @@ class Tour {
 
     static async ShowAll(db, page, limit) {
         try {
-            const getVoucher = await db.collection('Voucher').find({}).toArray()
-            const getTour = await db.collection('Tours').find({}).toArray()
-            let after_discout = 0
-            let result
-            for (let i = 0; i < getTour.length; i++) {
-                result = getVoucher.filter(voucher => {
-                    if (voucher.Condition.Min_tour_value === getTour[i].Price_Tour) {
-                        after_discout = getTour[i].Price_Tour * (1 - voucher.Discount / 100)
-                        db.collection('Tours').updateOne(
-                            { _id: new ObjectId(getTour[i]._id) },
-                            {
-                                $set: {
-                                    After_Discount: after_discout,
-                                }
-                            }
-                        )
-                    }
-
-                })
-            }
             const ResultGetTours = await db.collection('Tours').find({})
                 .skip((page - 1) * limit)
                 .limit(limit)
@@ -84,7 +64,7 @@ class Tour {
     async UpdateTour(db, id) {
         try {
             if (id) {
-                const result_Update = await db.collection('Tours').updateOne({_id : id},
+                const result_Update = await db.collection('Tours').updateOne({ _id: id },
                     {
                         $set: {
                             id_Schedule_Travel: this.id_Schedule_Travel,
@@ -104,7 +84,7 @@ class Tour {
                     }
                 )
                 return result_Update
-                
+
             }
         } catch (error) {
             console.log(error);
