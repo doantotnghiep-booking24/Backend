@@ -2,12 +2,12 @@ import Connection from '../../Config/db/index.js'
 import News from '../Models/News.js';
 import { ObjectId } from 'mongodb';
 import { v2 as cloudinary } from 'cloudinary';
-class Featured_Location {
+class News_Controller {
     GetAllNews(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
                 const AllNews = await News.getAll(db)
-                if (AllNews) return res.status(200).send({ Featured_Location: AllNews })
+                if (AllNews) return res.status(200).send({ News: AllNews })
             } catch (error) {
                 console.log(error);
             }
@@ -103,4 +103,4 @@ class Featured_Location {
         })
     }
 }
-export default new Featured_Location()
+export default new News_Controller()

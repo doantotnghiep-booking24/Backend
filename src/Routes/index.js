@@ -7,6 +7,7 @@ import Featured_Location from './Featured_Location.js'
 import News from './News.Route.js'
 import Voucher from './Voucher.Route.js' 
 import TypeTour from './TypeTour.Route.js'
+import Ticket from './Ticket.Route.js'
 const Route = (app) => {
     app.use('/V1/Tours', Tour)
     app.use('/V2/Category', Categories)
@@ -15,6 +16,7 @@ const Route = (app) => {
     app.use('/Services',Service)
     app.use('/Schedules',Schedule)
     app.use('/Vouchers',Voucher)
+    app.use('/Ticket',Ticket)
     app.use('/User', User)
     app.use('/News',News)
     app.use('/', Tour)
