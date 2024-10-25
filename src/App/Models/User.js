@@ -65,5 +65,28 @@ class User {
         }
     }
 
+
+    static async findByCode(db, code) {
+        try {
+            const user = await db.collection('Users').findOne({ code: code }); 
+            return user;
+        } catch (error) {
+            throw new Error(error); 
+        }
+    }
+
+
+    static async updatePassword(db, email, newPassword) {
+        try {
+            const result = await db.collection('Users').updateOne(
+                { Email: email }, 
+                { $set: { Password: newPassword } } 
+            );
+            return result;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
 }
 export default User

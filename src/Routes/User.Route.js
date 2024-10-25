@@ -7,6 +7,7 @@ Router.post('/Register', User_Controller.Register) //http://localhost:3001/V1/Us
 Router.post('/Login', Check_Decentralization, User_Controller.Login)
 Router.post('/RefreshToken', User_Controller.RefeshToken)
 Router.post('/Password-reset/request', User_Controller.PasswordResetRequest)//http://localhost:3001/User/Password-reset/request
+Router.post('/Password-reset/code', User_Controller.PasswordCode)//http://localhost:3001/User/Password-reset/code
 Router.get('/GetUser/:id', User_Controller.GetUserById)
 Router.get('/', User_Controller.Register)
 

@@ -145,7 +145,7 @@ class User_Controller {
 
                 if (!user) throw new Error('Email not found');
 
-                const code = crypto.randomBytes(3).toString('hex');
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
 
 
                 const result = await User.saveVerificationCode(db, email, code);
@@ -158,6 +158,36 @@ class User_Controller {
             } catch (error) {
                 console.error("Error occurred:", error); // Log lỗi chi tiết
                 res.status(500).json({ error: 'Internal Server Error' }); // Sử dụng mã trạng thái 500 cho lỗi nội bộ
+            }
+        });
+    };
+
+    PasswordCode = async (req, res) => {
+        const { code, newPassword } = req.body;
+
+
+
+        if (!code) return res.status(400).json({ message: 'Code is required.' });
+        if (!newPassword) return res.status(400).json({ message: 'New password is required.' });
+
+        Connection.connect().then(async (db) => {
+            try {
+
+                const user = await User.findByCode(db, code);
+                if (!user) return res.status(400).json({ message: 'Invalid code.' });
+                if (user.code_expiration < new Date()) return res.status(400).json({ message: 'Code has expired.' });
+
+
+                const hashPass = await bcrypt.hash(newPassword, 10);
+
+
+                const updateResult = await User.updatePassword(db, user.Email, hashPass);
+                if (updateResult.modifiedCount === 0) return res.status(400).json({ message: 'Password update failed.' });
+
+                res.status(200).json({ message: 'Password reset successfully' });
+            } catch (error) {
+                console.error("Error occurred:", error);
+                res.status(500).json({ error: 'Internal Server Error' });
             }
         });
     };
