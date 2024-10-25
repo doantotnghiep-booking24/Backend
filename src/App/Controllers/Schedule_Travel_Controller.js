@@ -13,10 +13,10 @@ class Schedule_Travel {
         })
     }
     CreateSchedule_Travel(req, res, next) {
-        const { Departure_Time, Location, means_of_transport } = req.body
+        const { Departure_Time, means_of_transport } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Schedule(undefined, Departure_Time, Location, means_of_transport)
+                const Create = new Schedule(undefined, Departure_Time, means_of_transport)
                 const result = await Create.CreateSchedule_Travel(db)
                 if (result) return res.status(200).send({ message: 'Created Success' })
             } catch (error) {
@@ -26,10 +26,10 @@ class Schedule_Travel {
     }
     UpdateSchedule_Travel(req, res, next) {
         const { id } = req.params
-        const { Departure_Time, Location, means_of_transport } = req.body
+        const { Departure_Time, means_of_transport } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const Update = new Schedule(undefined, Departure_Time, Location, means_of_transport)
+                const Update = new Schedule(undefined, Departure_Time, means_of_transport)
                 const result = await Update.UpdateSchedule_Travel(db, new ObjectId(id))
                 if (result) return res.status(200).send({ message: 'Updated Success' })
             } catch (error) {
