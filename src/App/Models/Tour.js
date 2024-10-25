@@ -1,19 +1,21 @@
+import { ObjectId } from "mongodb"
 class Tour {
-    constructor(_id, id_Schedule_Travel, id_Category, id_Service, id_Featured_Location, id_Type_Tour, Name_Tour, Price_Tour, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date) {
+    constructor(_id, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date, totalReview) {
         this._id = _id
         this.id_Schedule_Travel = id_Schedule_Travel
+        this.id_Voucher = id_Voucher
         this.id_Category = id_Category
-        this.id_Service = id_Service
-        this.id_Featured_Location = id_Featured_Location
         this.id_Type_Tour = id_Type_Tour
         this.Name_Tour = Name_Tour
         this.Price_Tour = Price_Tour
+        this.After_Discount = After_Discount
         this.Image_Tour = Image_Tour
         this.Title_Tour = Title_Tour
         this.Description_Tour = Description_Tour
         this.Start_Tour = Start_Tour
         this.End_Tour = End_Tour
-        this.total_Date = total_Date
+        this.total_Date = total_Date,
+            this.totalReview = totalReview
     }
     async CreateTour(db) {
         try {
@@ -35,8 +37,11 @@ class Tour {
                 .sort({ Price_Tour: 1 })
                 .toArray()
             const totalItems = await db.collection('Tours').countDocuments({})
-            const response = ResultGetTours.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Category, item.id_Service, item.id_Featured_Location, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date))
+            const response = ResultGetTours.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Voucher, item.id_Category, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.After_Discount, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date, item.totalReview))
+            console.log(response);
+
             return {
+
                 totalItems: totalItems,
                 Page: page,
                 TotalPages: Math.ceil(totalItems / limit),
@@ -57,26 +62,53 @@ class Tour {
             throw (error)
         }
     }
+    static async UpdateTourTotalRating(db, id, updates) {
+        try {
+            if (id) {
+                const result_Update = await db.collection('Tours').updateOne({ _id: id },
+                    {
+                        $set: {
+                            totalReview: updates.totalReview // Cập nhật totalReview
+                        }
+                    }
+                )
+                console.log(result_Update);
+
+                return result_Update
+
+            }
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
+
 
     async UpdateTour(db, id) {
         try {
             if (id) {
-                const result_Update = await db.collection('Tours').updateOne(
-                    { _id: id },
+                const result_Update = await db.collection('Tours').updateOne({ _id: id },
                     {
                         $set: {
+                            id_Schedule_Travel: this.id_Schedule_Travel,
+                            id_Voucher: this.id_Voucher,
+                            id_Category: this.id_Category,
+                            id_Type_Tour: this.id_Type_Tour,
                             Name_Tour: this.Name_Tour,
                             Price_Tour: this.Price_Tour,
+                            After_Discount: this.After_Discount,
                             Image_Tour: this.Image_Tour,
                             Title_Tour: this.Title_Tour,
                             Description_Tour: this.Description_Tour,
                             Start_Tour: this.Start_Tour,
                             End_Tour: this.End_Tour,
                             total_Date: this.total_Date,
+
                         }
                     }
                 )
                 return result_Update
+
             }
         } catch (error) {
             console.log(error);

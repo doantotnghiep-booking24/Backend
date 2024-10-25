@@ -1,5 +1,5 @@
 class Voucher {
-    constructor(_id, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition) {
+    constructor(_id, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition,isexpired) {
         this._id = _id
         this.Code_Voucher = Code_Voucher
         this.Description = Description
@@ -9,6 +9,7 @@ class Voucher {
         this.End_Date = End_Date
         this.Max_Usage = Max_Usage
         this.Condition = Condition
+        this.isexpired = isexpired
     }
     static async getAll(db) {
         try {
@@ -51,7 +52,7 @@ class Voucher {
                         Start_Date: this.Start_Date,
                         End_Date: this.End_Date,
                         Max_Usage: this.Max_Usage,
-                        Condition: this.Condition
+                        Condition: this.Condition,
                     }
                 })
             return Update

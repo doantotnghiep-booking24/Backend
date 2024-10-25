@@ -12,10 +12,10 @@ const storage = new CloudinaryStorage({
   cloudinary,
   allowedFormats: ['jpg', 'png'],
   params: {
-    folder: 'StorageImages'
+    folder: 'ImagesComment'
   }
 });
 
-const uploadCloud = multer({ storage });
+const uploadCloudComment = multer({ storage });
 
-export default uploadCloud;
+export default uploadCloudComment;

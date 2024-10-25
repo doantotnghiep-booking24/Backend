@@ -1,7 +1,6 @@
 class Schedule_Travel {
-    constructor(_id, Departure_Time, Location, means_of_transport) {
+    constructor(_id, Name_Schedule, Location, means_of_transport) {
         this._id = _id
-        this.Departure_Time = Departure_Time
         this.Location = Location
         this.means_of_transport = means_of_transport
     }
@@ -33,7 +32,6 @@ class Schedule_Travel {
                 { _id: id },
                 {
                     $set: {
-                        Departure_Time: this.Departure_Time,
                         Location: this.Location,
                         means_of_transport: this.means_of_transport,
                     }
