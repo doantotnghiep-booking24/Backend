@@ -35,5 +35,35 @@ class User {
         }
     }
 
+    static async GetUserById(db, id) {
+        try {
+            return await db.collection('Users').findOne({ _id: id })
+
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
+
+    static async saveVerificationCode(db, email, code) {
+        const expirationTime = new Date(Date.now() + 10 * 60 * 1000); // Thời gian hết hạn: 10 phút
+        try {
+            const result = await db.collection('Users').updateOne(
+                { Email: email }, // Tìm người dùng theo email
+                {
+                    $set: {
+                        code: code, // Lưu mã xác nhận
+                        code_expiration: expirationTime // Lưu thời gian hết hạn
+                    }
+                }
+            );
+            console.log(result);
+            
+            return result;
+        } catch (error) {
+            console.error("Error updating verification code:", error);
+            throw new Error("Could not save verification code");
+        }
+    }
+
 }
 export default User
