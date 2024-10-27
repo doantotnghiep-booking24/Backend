@@ -12,7 +12,7 @@ class Auth {
         // console.log('Payload', Payload);
 
         const options = {
-            expiresIn: '50s',
+            expiresIn: '1d',
             algorithm: 'HS256'
         };
 
@@ -34,32 +34,35 @@ class Auth {
 
     // verify token
     static verifyJWTToken = (req, res, next) => {
-        // get token from http header Authorization
-        let token = null;
-        const authHeader = req.headers.token
-        console.log(`AuthHeader: ${authHeader}`);
-        if (authHeader != null) {
-            token = authHeader.split(' ')[1];
-            console.log(`Token from Header: ${token}`);
-        } else {
-            // get token from http cookie
-            token = req.cookies.token;
-            // console.log(`Token from Cookie: ${token}`)
-        }
-        if (token == null) return res.status(401).json({ message: 'Unauthorized' });
+        // Lấy token từ header Authorization
+        const authHeader = req.headers['authorization']; // Đảm bảo sử dụng chuỗi 'authorization'
+        console.log(req.headers); // Ghi lại tất cả các header
 
+        console.log(`AuthHeader: ${authHeader}`);
+        let token = null;
+
+        if (authHeader) {
+            token = authHeader.split(' ')[1]; // Lấy token sau từ khóa 'Bearer'
+            console.log(`Token from Header: ${token}`);
+        }
+
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized' }); // Nếu không có token, trả về lỗi Unauthorized
+        }
+
+        // Kiểm tra tính hợp lệ của token
         jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN, (err, decoded) => {
             if (err) {
                 console.error(err);
-                return res.status(403).json({ message: 'Invalid token' });
+                
+                return res.status(403).json({ message: err }); // Nếu token không hợp lệ, trả về lỗi
             } else {
-                // console.log(`Decoded: ${decoded}`);
-                req.email = decoded.email;
-                // console.log(`Email: ${req.email}`);
-                next();
+                req.email = decoded.email; // Lưu thông tin email từ token vào req
+                next(); // Tiếp tục tới middleware hoặc route tiếp theo
             }
         });
     }
+
 }
 
 export default Auth;

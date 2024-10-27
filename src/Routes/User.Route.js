@@ -8,6 +8,7 @@ Router.post('/Login', Check_Decentralization, User_Controller.Login)
 Router.post('/RefreshToken', User_Controller.RefeshToken)
 Router.post('/Password-reset/request', User_Controller.PasswordResetRequest)//http://localhost:3001/User/Password-reset/request
 Router.post('/Password-reset/code', User_Controller.PasswordCode)//http://localhost:3001/User/Password-reset/code
+Router.post('/LoginWithGoogle', User_Controller.LoginWithGoogle)//http://localhost:3001/User/LoginWithGoogle
 Router.get('/GetUser/:id', User_Controller.GetUserById)
 Router.get('/', User_Controller.Register)
 

@@ -1,7 +1,10 @@
 import express from 'express'
 import Reviews_Controller from '../App/Controllers/Reviews_Controller.js'
 import uploadCloudComment from '../App/MiddleWare/ImageComment.js'
+import Auth from "../App/MiddleWare/Jwt/Auth.js"
 const Router = express.Router()
+
+
 
 Router.get('/GetReview/:id', Reviews_Controller.GetAllReviews)  // Vd :  http://localhost:3001/V1/Review/GetReview
 

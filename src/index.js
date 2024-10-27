@@ -10,7 +10,8 @@ const app = express()
 
 app.use(cors({
     origin:"http://localhost:5173",
-    credentials: true
+    credentials: true,
+    exposedHeaders: ['Authorization']
 }))
 Connection.connect().then(async (db) => {
     try {
