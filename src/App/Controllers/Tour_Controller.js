@@ -1,5 +1,8 @@
 import Connection from '../../Config/db/index.js'
 import Tour from '../Models/Tour.js';
+import Comments from '../Models/Comments.js';
+import User from '../Models/User.js';
+import Reviews from '../Models/Review.js';
 import { ObjectId } from 'mongodb';
 import { v2 as cloudinary } from 'cloudinary';
 class Tour_Controller {
@@ -16,7 +19,7 @@ class Tour_Controller {
                     Data_rm.push(filesData[i].filename)
                 }
                 Image_Tour = Data_Image
-                const Create_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount , Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Create_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
                 const result = await Create_Tour.CreateTour(db)
                 if (!result) {
                     if (filesData) {
@@ -75,8 +78,7 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const filterNews = await db.collection('Tours').find({ _id: new ObjectId(id) }).toArray()
-                console.log(filterNews);
-                
+
                 for (let i = 0; i < filesData.length; i++) {
                     Data_Image.push(filesData[i])
                     Data_rm.push(filesData[i].filename)
@@ -84,7 +86,7 @@ class Tour_Controller {
                     count++
                 }
                 Image_Tour = Data_Image
-                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount , Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Update_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
                 const result = await Update_Tour.UpdateTour(db, new ObjectId(id))
                 if (Update_Tour) {
                     if (!result) {
@@ -98,10 +100,10 @@ class Tour_Controller {
                     } else {
                         filterNews.map(data_new => {
                             filenameUpd = data_new.Image_Tour
-                            
+
                         })
-                        // console.log(filenameUpd);
-                        
+
+
                         for (let i = 0; i < filenameUpd.length; i++) {
                             cloudinary.api.delete_resources(filenameUpd[i].filename, (error, result) => {
                                 console.log('error', error);
@@ -138,5 +140,60 @@ class Tour_Controller {
             }
         })
     }
+
+    async getAllComments(req, res, next) {
+        const { id } = req.params;
+
+
+        try {
+            const db = await Connection.connect();
+
+            const AllReviews = await Reviews.getAll(db, id);
+            const AllComments = await Comments.getAll(db, id);
+            const detailTour = await Tour.Detail(db, new ObjectId(id));
+
+            const tourIds = detailTour.map(tour => tour._id);
+
+            // Lọc các đánh giá có rating là 5 sao
+            const fiveStarReviews = AllReviews.filter(
+                review => Number(review.rating) === 5 && tourIds.some(tourId => new ObjectId(review.tourId).equals(tourId))
+            );
+
+            // Ghép đánh giá và bình luận tương ứng
+            const combinedResults = await Promise.all(fiveStarReviews.map(async (review) => {
+                const commentsForReview = AllComments.filter(comment => comment.idRating.toString() === review._id.toString());
+                const firstComment = commentsForReview.length > 0 ? commentsForReview[0] : {};
+
+                // Lấy thông tin user
+                const user = await User.GetUserById(db, new ObjectId(review.userId));
+
+                return {
+                    _id: firstComment._id,
+                    userId: review.userId,
+                    userName: user ? user.Name : "Unknown User",  // Thêm tên người dùng
+                    tourId: review.tourId,
+                    rating: Number(review.rating),
+                    likes: firstComment.likes,
+                    dislikes: firstComment.dislikes,
+                    Image: commentsForReview.map(comment => comment.Image).flat(),
+                    content: commentsForReview.length > 0 ? commentsForReview[0].content : null,
+                    Create_At: review.Created_At,
+                };
+            }));
+
+            // Trả về kết quả
+            if (combinedResults.length > 0) {
+                return res.status(200).json({ data: combinedResults }); // Gửi kết quả đã ghép
+            } else {
+                return res.status(200).json({ message: "No 5-star comments" });
+            }
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send({ message: "Internal Server Error" });
+        }
+    }
+
+
 }
 export default new Tour_Controller()

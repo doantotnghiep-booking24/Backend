@@ -6,11 +6,13 @@ import Connection from './Config/db/index.js'
 import { ObjectId } from 'mongodb';
 import moment from 'moment';
 import { engine } from 'express-handlebars';
+import setupSocket from './socket.js';
+import { createServer } from 'http';
 const app = express()
 // console.log('123');
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin:"http://localhost:5173",
     credentials: true
 }))
 
@@ -106,4 +108,15 @@ Connection.connect().then(async (db) => {
         }
     }
 })
-app.listen(3001)
+app.use(express.json({ limit: '1000mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // use cookie-parser to read cookies
+
+const httpServer = createServer(app);
+const io = setupSocket(httpServer);
+app.set('io', io);
+Route(app)
+
+httpServer.listen(3001)
+export { io }
+

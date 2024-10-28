@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb"
 class Tour {
-    constructor(_id, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date) {
+    constructor(_id, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date, totalReview) {
         this._id = _id
         this.id_Schedule_Travel = id_Schedule_Travel
         this.id_Voucher = id_Voucher
@@ -14,7 +14,8 @@ class Tour {
         this.Description_Tour = Description_Tour
         this.Start_Tour = Start_Tour
         this.End_Tour = End_Tour
-        this.total_Date = total_Date
+        this.total_Date = total_Date,
+            this.totalReview = totalReview
     }
     async CreateTour(db) {
         try {
@@ -40,6 +41,7 @@ class Tour {
             // console.log(response);
 
             return {
+
                 totalItems: totalItems,
                 Page: page,
                 TotalPages: Math.ceil(totalItems / limit),
@@ -60,6 +62,27 @@ class Tour {
             throw (error)
         }
     }
+    static async UpdateTourTotalRating(db, id, updates) {
+        try {
+            if (id) {
+                const result_Update = await db.collection('Tours').updateOne({ _id: id },
+                    {
+                        $set: {
+                            totalReview: updates.totalReview // Cập nhật totalReview
+                        }
+                    }
+                )
+                console.log(result_Update);
+
+                return result_Update
+
+            }
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
+
 
     async UpdateTour(db, id) {
         try {
@@ -80,6 +103,7 @@ class Tour {
                             Start_Tour: this.Start_Tour,
                             End_Tour: this.End_Tour,
                             total_Date: this.total_Date,
+
                         }
                     }
                 )

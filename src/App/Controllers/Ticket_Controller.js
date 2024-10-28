@@ -18,14 +18,16 @@ const config = {
 let id_Custommer
 class Ticket_Controller {
     GetAllTicket(req, res, next) {
-        //   Connection.connect().then(async (db) => {
-        //      try {
-        //         const GetTickets = await Ticket.GetTicket(db)
-        //         if (GetTickets) return res.status(200).send({ Tickets: GetTickets })
-        //      } catch (error) {
-        //         console.log(error);
-        //      }
-        //   })
+          Connection.connect().then(async (db) => {
+             try {
+                const GetTickets = await Ticket.GetTicket(db)
+                if (GetTickets) return res.status(200).send({ Tickets: GetTickets })
+                    console.log(GetTickets);
+                    
+             } catch (error) {
+                console.log(error);
+             }
+          })
     }
     async PaymentWithZalopay(req, res, next) {
         const embed_data = {

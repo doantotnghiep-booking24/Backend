@@ -26,7 +26,7 @@ class Ticket {
 
     static async GetTicket(db) {
         try {
-            const result_GetTicket = await db.collection('Ticket')
+            const result_GetTicket = await db.collection('Tickets')
                 .find({})
                 .toArray()
             return result_GetTicket
