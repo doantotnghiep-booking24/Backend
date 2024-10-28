@@ -21,7 +21,7 @@ class User_Controller {
             try {
                 const result_user = await User.Check_UserisExist(db, Email)
                 if (result_user) {
-                   return res.status(400).send({ error: 'Email is already taken' })
+                    return res.status(400).send({ error: 'Email is already taken' })
                 } else {
                     bcrypt.hash(Password, 10, (err, hash) => {
                         if (err) {
@@ -69,8 +69,9 @@ class User_Controller {
                             if (AccessToken) {
                                 res.cookie('AccessToken', AccessToken, {
                                     httpOnly: true,
-                                    secure: false, // false if not using https | true if using https
+                                    secure: false, // false if not using http | true if using https
                                     sameSite: 'strict', // use 'strict', 'lax', or 'none'
+                                    domain: 'http://localhost:5173/',
                                     maxAge: 3600000, // expired time, should set to match token expiry (1h)
                                 });
                             }

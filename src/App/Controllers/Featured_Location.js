@@ -7,7 +7,7 @@ class Featured_Location {
         Connection.connect().then(async (db) => {
             try {
                 const AllFeatured_Location = await Featured_Locations.getAll(db)
-                if (AllFeatured_Location) return res.status(200).send({ Featured_Location: AllFeatured_Location })
+                if (AllFeatured_Location) return res.status(200).json({ Featured_Location: AllFeatured_Location })
             } catch (error) {
                 console.log(error);
             }
@@ -34,9 +34,9 @@ class Featured_Location {
                         })
                     }
                 }
-                return res.status(400).send({ message: 'Created Tour Failed' })
+                return res.status(400).json({ message: 'Created Tour Failed' })
             }
-            return res.status(200).send({ message: 'Created Tour Success' })
+            return res.status(200).json({ message: 'Created Tour Success' })
         })
     }
     UpdateFeatured_Location(req, res, next) {
@@ -67,7 +67,7 @@ class Featured_Location {
                             console.log('result', result);
                         })
                     }
-                    return res.status(400).send({ message: 'Update Failed' })
+                    return res.status(400).json({ message: 'Update Failed' })
                 } else {
                     filterNews.map(data_new => {
                         filenameUpd = data_new.Image_Location
@@ -78,7 +78,7 @@ class Featured_Location {
                             console.log('result', result);
                         })
                     }
-                    return res.status(200).send({ message: 'Update Success' })
+                    return res.status(200).json({ message: 'Update Success' })
                 }
             } catch (error) {
                 console.log(error);
@@ -90,7 +90,7 @@ class Featured_Location {
         Connection.connect().then(async (db) => {
             try {
                 const DeleteFeatured = Featured_Locations.Delete(db, new ObjectId(id))
-                if (DeleteFeatured) return res.status(200).send({ message: 'Delete Success' })
+                if (DeleteFeatured) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }

@@ -1,0 +1,51 @@
+<div>
+        <div>
+            <img style="width: 100px; height: 80px; object-fit: cover; margin-left: 100px;"
+                src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg" alt="">
+        </div>
+        <div style="background-color: bisque; height: 50px;">
+            <p style="line-height: 50px; text-align: center; font-size: 15px;">Vui lòng không tắt trình duyệt cho đến
+                khi được xác nhận!</p>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <div>
+                <div
+                    style="border-radius: 50%; width: 160px; height: 160px; background-color:lightslategrey ; position: relative; margin: 40px;">
+                    <i style="font-size: 100px; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);"
+                        class="fa-regular fa-thumbs-up"></i>
+                </div>
+                <p style="color: rgb(46, 46, 235); font-weight: bold; font-size: larger; ">THANH TOÁN THÀNH CÔNG</p>
+                <br>
+                <a style="margin-left: 50px;" href="http://localhost:5173/booking-history">Hệ thống sẽ quay trở lại sau</a>
+                <span id="back" style="margin-left: 4px; transition: 0.5s; color: rgb(0, 0, 255);"> 10 giây </span>
+            </div>
+        </div>
+        <div
+            style="position: absolute; bottom: 0; background-color: rgb(214, 244, 229); display: flex; width: 100%; display: flex; justify-content: space-around;">
+            <div style="margin-left: 40px;">
+                <h3>GATEWAY</h3>
+                <p>Dịch vụ Cổng thanh toán VNpay</p>
+                <p>Giấy phép hoạt động cung ứng dịch vụ Trung gian thanh toán do ngân hàng nhà nước cấp</p>
+                <br>
+                <br>
+                <br>
+                @Bản quyền thuộc về Vnpay
+            </div>
+            <div style="margin-left: 30px;">
+                <h3>Hỗ trợ khách hàng</h3>
+                <p>Email: hotrovnpay@vnpay.vn</p>
+                <p>Phone: 1900 55 55 77</p>
+            </div>
+        </div>
+    </div>
+    <script>
+    let back = document.getElementById('back')
+    let value = parseInt(back.textContent)
+    setInterval(() => {
+        value = value - 1
+        back.textContent = value +'s'
+        if (value <= 0) {
+        window.location.href = 'http://localhost:5173/booking-history'
+    }
+    }, 1000)
+</script>

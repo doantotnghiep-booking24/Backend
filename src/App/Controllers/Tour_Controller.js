@@ -22,13 +22,13 @@ class Tour_Controller {
                     if (filesData) {
                         for (let i = 0; i < filesData.length; i++) {
                             cloudinary.api.delete_resources(filesData[i].filename, (error, result) => {
-                                console.log(result, error);
+                                console.log(result, error)
                             })
                         }
                     }
-                    return res.status(400).send({ message: 'Created Tour Failed' })
+                    return res.status(400).json({ message: 'Created Tour Failed' })
                 }
-                return res.status(200).send({ message: 'Created Tour Success' })
+                return res.status(200).json({ message: 'Created Tour Success' })
             } catch (error) {
                 console.log(error)
             }
@@ -40,7 +40,9 @@ class Tour_Controller {
             try {
                 const AllTour = await Tour.ShowAll(db, parseInt(page), parseInt(limit))
                 if (AllTour) {
-                    return res.status(200).send({ Tours: AllTour })
+                    return res.status(200).json({ Tours: AllTour })
+                }else{
+                    return res.status(400).json({Message : 'Error'})
                 }
             } catch (error) {
                 console.log(error);
@@ -53,7 +55,7 @@ class Tour_Controller {
             try {
                 const Delete_Tour = await Tour.Delete(db, new ObjectId(id))
                 if (Delete_Tour) {
-                    return res.status(200).send({ message: "Delete Success" })
+                    return res.status(200).json({ message: "Delete Success" })
                 }
             } catch (error) {
                 console.log(error);
@@ -92,7 +94,7 @@ class Tour_Controller {
                                 console.log('result', result);
                             })
                         }
-                        return res.status(400).send({ message: 'Update Failed' })
+                        return res.status(400).json({ message: 'Update Failed' })
                     } else {
                         filterNews.map(data_new => {
                             filenameUpd = data_new.Image_Tour
@@ -106,7 +108,7 @@ class Tour_Controller {
                                 console.log('result', result);
                             })
                         }
-                        return res.status(200).send({ message: 'Update Success' })
+                        return res.status(200).json({ message: 'Update Success' })
                     }
                 }
             } catch (error) {
@@ -119,7 +121,7 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const resultSearch = await Tour.Search(db, NameSearch, parseInt(PriceSearch), parseInt(page), parseInt(limit))
-                if (resultSearch) return res.status(200).send({ search: resultSearch })
+                if (resultSearch) return res.status(200).json({ search: resultSearch })
             } catch (error) {
                 console.log(err)
             }
@@ -130,7 +132,7 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const detailTour = await Tour.Detail(db, new ObjectId(id))
-                if (detailTour) return res.status(200).send({ detailTour: detailTour })
+                if (detailTour) return res.status(200).json({ detailTour: detailTour })
             } catch (error) {
                 console.log(error);
             }
