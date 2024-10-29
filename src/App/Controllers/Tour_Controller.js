@@ -42,6 +42,8 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllTour = await Tour.ShowAll(db, parseInt(page), parseInt(limit))
+                // console.log(AllTour);
+                
                 if (AllTour) {
                     return res.status(200).json({ Tours: AllTour })
                 }else{

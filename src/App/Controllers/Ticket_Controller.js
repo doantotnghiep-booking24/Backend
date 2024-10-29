@@ -18,16 +18,16 @@ const config = {
 let id_Custommer
 class Ticket_Controller {
     GetAllTicket(req, res, next) {
-          Connection.connect().then(async (db) => {
-             try {
+        Connection.connect().then(async (db) => {
+            try {
                 const GetTickets = await Ticket.GetTicket(db)
                 if (GetTickets) return res.status(200).send({ Tickets: GetTickets })
-                    console.log(GetTickets);
-                    
-             } catch (error) {
+                console.log(GetTickets);
+
+            } catch (error) {
                 console.log(error);
-             }
-          })
+            }
+        })
     }
     async PaymentWithZalopay(req, res, next) {
         const embed_data = {
@@ -176,9 +176,10 @@ class Ticket_Controller {
     }
     CreateTicket(req, res, next) {
         let { Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method } = req.body
+        let isCancle
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method = null)
+                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method = null, isCancle = true)
                 const result = await Create.CreateTicket(db)
                 if (result) {
                     return res.status(200).send({ message: 'Created Success', ticKetId: result })
@@ -430,7 +431,7 @@ class Ticket_Controller {
                     return res.status(400).json({ Error: 'Đặt vé không thành công' })
                 }
             })
-            
+
         }
     }
 }

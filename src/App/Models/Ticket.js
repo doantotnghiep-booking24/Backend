@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb"
 
 class Ticket {
-    constructor(_id, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method) {
+    constructor(_id, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method, isCancle) {
         this._id = _id
         this.Departure_Location = Departure_Location
         this.Destination = Destination
@@ -22,6 +22,7 @@ class Ticket {
         this.Created_at_Booking = Created_at_Booking
         this.Status_Payment = Status_Payment
         this.Payment_Method = Payment_Method
+        this.isCancle = isCancle
     }
 
     static async GetTicket(db) {
@@ -78,7 +79,7 @@ class Ticket {
         }
     }
     static async UpdateDirctTicket(db, id_ticket, id_Custommer, Status, Payment_method) {
-        try {    
+        try {
             const result_Update = await db.collection('Tickets').updateOne(
                 { _id: id_ticket },
                 {
