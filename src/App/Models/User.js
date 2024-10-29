@@ -1,11 +1,12 @@
 class User {
-    constructor(_id, Name, Email, Password, photoUrl, Role) {
+    constructor(_id, Name, Email, Password, photoUrl, Role, typeLogin) {
         this._id = _id
         this.Name = Name
         this.Email = Email
         this.Password = Password
         this.photoUrl = photoUrl
         this.role = Role
+        this.typeLogin = typeLogin
     }
     // Register
     static async Check_UserisExist(db, Email) {
