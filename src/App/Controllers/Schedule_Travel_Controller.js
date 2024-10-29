@@ -6,7 +6,7 @@ class Schedule_Travel {
         Connection.connect().then(async (db) => {
             try {
                 const GetSchedule_Travel = await Schedule.GetSchedule_Travel(db)
-                if (GetSchedule_Travel) return res.status(200).send({ Schedule_Travel: GetSchedule_Travel })
+                if (GetSchedule_Travel) return res.status(200).json({ Schedule_Travel: GetSchedule_Travel })
             } catch (error) {
                 console.log(error);
             }
@@ -18,7 +18,7 @@ class Schedule_Travel {
             try {
                 const Create = new Schedule(undefined, Departure_Time, means_of_transport)
                 const result = await Create.CreateSchedule_Travel(db)
-                if (result) return res.status(200).send({ message: 'Created Success' })
+                if (result) return res.status(200).json({ message: 'Created Success' })
             } catch (error) {
                 console.log(error);
             }
@@ -31,7 +31,7 @@ class Schedule_Travel {
             try {
                 const Update = new Schedule(undefined, Departure_Time, means_of_transport)
                 const result = await Update.UpdateSchedule_Travel(db, new ObjectId(id))
-                if (result) return res.status(200).send({ message: 'Updated Success' })
+                if (result) return res.status(200).json({ message: 'Updated Success' })
             } catch (error) {
                 console.log(error);
             }
@@ -42,7 +42,7 @@ class Schedule_Travel {
         Connection.connect().then(async (db) => {
             try {
                 const Delete = Schedule.DeleteSchedule_Travel(db, new ObjectId(id))
-                if (Delete) return res.status(200).send({ message: 'Deleted Success' })
+                if (Delete) return res.status(200).json({ message: 'Deleted Success' })
             } catch (error) {
                 console.log(error);
             }

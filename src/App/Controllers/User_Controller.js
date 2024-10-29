@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import Auth from '../MiddleWare/Jwt/Auth.js';
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
+import crypto from 'crypto'
+import { emailService } from '../Services/emailService.js';
 
 class User_Controller {
     Register(req, res, next) {
@@ -21,7 +23,7 @@ class User_Controller {
             try {
                 const result_user = await User.Check_UserisExist(db, Email)
                 if (result_user) {
-                   return res.status(400).send({ error: 'Email is already taken' })
+                    return res.status(400).send({ error: 'Email is already taken' })
                 } else {
                     bcrypt.hash(Password, 10, (err, hash) => {
                         if (err) {
@@ -66,15 +68,14 @@ class User_Controller {
                         if (result) {
                             const AccessToken = Auth.createAccessToken(find_user.Name, find_user.Email, find_user.role)
                             const RefeshToken = Auth.GeneralRefeshToken(find_user.Name, find_user.Email, find_user.role)
-                            if (AccessToken) {
-                                res.cookie('AccessToken', AccessToken, {
-                                    httpOnly: true,
-                                    secure: false, // false if not using https | true if using https
-                                    sameSite: 'strict', // use 'strict', 'lax', or 'none'
-                                    maxAge: 3600000, // expired time, should set to match token expiry (1h)
-                                });
+                            const inforUser = {
+                                _id: find_user._id,
+                                Name: find_user.Name,
+                                Email: find_user.Email,
+                                AccessToken,
+                                RefeshToken
                             }
-                            res.status(200).send({ ...find_user, AccessToken, RefeshToken })
+                            res.status(200).send({ inforUser })
                         }
                     }
                 })
@@ -86,7 +87,7 @@ class User_Controller {
     RefeshToken(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
-                const RefreshTokens = req.headers.token.split(" ")[1]
+                const RefreshTokens = req?.headers?.token?.split(" ")[1]
                 if (RefreshTokens) {
                     jwt.verify(RefreshTokens, process.env.SECRET_KEY_REFESH_TOKEN, (err, user) => {
                         if (err) {
@@ -107,5 +108,88 @@ class User_Controller {
             }
         })
     }
+
+    GetUserById(req, res) {
+        const { id } = req.params
+
+
+        Connection.connect().then(async (db) => {
+            try {
+                const find_user = await User.GetUserById(db, new ObjectId(id))
+                if (!find_user) {
+                    console.log(find_user);
+
+                    return res.status(404).send({ message: 'Email not found' })
+                }
+                res.status(200).json({ userByid: find_user })
+
+
+
+            } catch (error) {
+                console.log('error', error);
+            }
+        })
+    }
+
+    PasswordResetRequest = async (req, res) => {
+        const { email } = req.body;
+
+        if (!email) return res.status(400).json({ message: 'Email are required' });
+
+        Connection.connect().then(async (db) => {
+            try {
+                const user = await User.Find_user(db, email);
+
+
+
+                if (!user) throw new Error('Email not found');
+
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+
+                const result = await User.saveVerificationCode(db, email, code);
+
+
+                await emailService.sendVerificationEmail(email, code);
+
+
+                res.status(200).json({ user });
+            } catch (error) {
+                console.error("Error occurred:", error); // Log lỗi chi tiết
+                res.status(500).json({ error: 'Internal Server Error' }); // Sử dụng mã trạng thái 500 cho lỗi nội bộ
+            }
+        });
+    };
+
+    PasswordCode = async (req, res) => {
+        const { code, newPassword } = req.body;
+
+
+
+        if (!code) return res.status(400).json({ message: 'Code is required.' });
+        if (!newPassword) return res.status(400).json({ message: 'New password is required.' });
+
+        Connection.connect().then(async (db) => {
+            try {
+
+                const user = await User.findByCode(db, code);
+                if (!user) return res.status(400).json({ message: 'Invalid code.' });
+                if (user.code_expiration < new Date()) return res.status(400).json({ message: 'Code has expired.' });
+
+
+                const hashPass = await bcrypt.hash(newPassword, 10);
+
+
+                const updateResult = await User.updatePassword(db, user.Email, hashPass);
+                if (updateResult.modifiedCount === 0) return res.status(400).json({ message: 'Password update failed.' });
+
+                res.status(200).json({ message: 'Password reset successfully' });
+            } catch (error) {
+                console.error("Error occurred:", error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+    };
+
 }
 export default new User_Controller()

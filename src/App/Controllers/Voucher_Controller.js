@@ -6,7 +6,7 @@ class Voucher_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllVoucher = await Voucher.getAll(db)
-                if (AllVoucher) return res.status(200).send({ Voucher: AllVoucher })
+                if (AllVoucher) return res.status(200).json({ Voucher: AllVoucher })
             } catch (error) {
                 console.log(error);
             }
@@ -30,9 +30,9 @@ class Voucher_Controller {
             if (!CheckIsVoucher) {
                 const CreateVoucher = new Voucher(undefined, Code_Voucher, Description, parseInt(Discount), Type, Start_Date, End_Date, Max_Usage, Condition, isexpired)
                 const result = await CreateVoucher.Create(db)
-                if (result) return res.status(200).send({ message: 'Create Success' })
+                if (result) return res.status(200).json({ message: 'Create Success' })
             } else {
-                return res.status(400).send({ message: 'Name Voucher is already exist' })
+                return res.status(400).json({ message: 'Name Voucher is already exist' })
             }
         })
     }
@@ -43,7 +43,7 @@ class Voucher_Controller {
             try {
                 const UpdateVoucher = new Voucher(undefined, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition)
                 const result = await UpdateVoucher.Update(db, new ObjectId(id))
-                if (result) return res.status(200).send({ message: 'Update Success' })
+                if (result) return res.status(200).json({ message: 'Update Success' })
             } catch (error) {
                 console.log(error);
             }
@@ -54,7 +54,7 @@ class Voucher_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const DeleteVoucher = Voucher.Delete(db, new ObjectId(id))
-                if (DeleteVoucher) return res.status(200).send({ message: 'Delete Success' })
+                if (DeleteVoucher) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }

@@ -6,7 +6,7 @@ class TypeTour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllTypeTour = await TypeTour.getAll(db)
-                if (AllTypeTour) return res.status(200).send({ TypeTour: AllTypeTour })
+                if (AllTypeTour) return res.status(200).json({ TypeTour: AllTypeTour })
             } catch (error) {
                 console.log(error);
             }
@@ -19,9 +19,9 @@ class TypeTour_Controller {
             if (!CheckTypeTour) {
                 const CreateTypeTour = new TypeTour(undefined, Name_Type)
                 const result = await CreateTypeTour.Create(db)
-                if (result) return res.status(200).send({ message: 'Create Success' })
+                if (result) return res.status(200).json({ message: 'Create Success' })
             } else {
-                return res.status(400).send({ message: 'Name Type_Tour is already exist' })
+                return res.status(400).json({ message: 'Name Type_Tour is already exist' })
             }
         })
     }
@@ -32,7 +32,7 @@ class TypeTour_Controller {
             try {
                 const UpdateTypeTour = new TypeTour(undefined, Name_Type)
                 const result = await UpdateTypeTour.Update(db, new ObjectId(id))
-                if (result) return res.status(200).send({ message: 'Update Success' })
+                if (result) return res.status(200).json({ message: 'Update Success' })
             } catch (error) {
                 console.log(error);
             }
@@ -43,7 +43,7 @@ class TypeTour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const DeleteTypeTour = TypeTour.Delete(db, new ObjectId(id))
-                if (DeleteTypeTour) return res.status(200).send({ message: 'Delete Success' })
+                if (DeleteTypeTour) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }
