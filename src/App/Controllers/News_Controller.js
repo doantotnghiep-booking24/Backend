@@ -2,12 +2,12 @@ import Connection from '../../Config/db/index.js'
 import News from '../Models/News.js';
 import { ObjectId } from 'mongodb';
 import { v2 as cloudinary } from 'cloudinary';
-class Reviews {
+class News_Controller {
     GetAllNews(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
                 const AllNews = await News.getAll(db)
-                if (AllNews) return res.status(200).send({ Featured_Location: AllNews })
+                if (AllNews) return res.status(200).json({ News: AllNews })
             } catch (error) {
                 console.log(error);
             }
@@ -36,9 +36,9 @@ class Reviews {
                             })
                         }
                     }
-                    return res.status(400).send({ Message: "You need to fill in complete information" })
+                    return res.status(400).json({ Message: "You need to fill in complete information" })
                 }
-                res.status(200).send({ message: 'Create Success' })
+                res.status(200).json({ message: 'Create Success' })
             })
 
         } catch (error) {
@@ -84,7 +84,7 @@ class Reviews {
                             console.log('result', result);
                         })
                     }
-                    return res.status(200).send({ message: 'Update Success' })
+                    return res.status(200).json({ message: 'Update Success' })
                 }
             } catch (error) {
                 console.log(error);
@@ -96,11 +96,11 @@ class Reviews {
         Connection.connect().then(async (db) => {
             try {
                 const DeleteNew = await News.Delete(db, new ObjectId(id))
-                if (DeleteNew) return res.status(200).send({ message: 'Delete Success' })
+                if (DeleteNew) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }
         })
     }
 }
-export default new Reviews()
+export default new News_Controller()
