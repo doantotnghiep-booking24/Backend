@@ -2,7 +2,7 @@ import Connection from '../../Config/db/index.js'
 import News from '../Models/News.js';
 import { ObjectId } from 'mongodb';
 import { v2 as cloudinary } from 'cloudinary';
-class Reviews {
+class News_Controller {
     GetAllNews(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
@@ -103,4 +103,4 @@ class Reviews {
         })
     }
 }
-export default new Reviews()
+export default new News_Controller()

@@ -175,7 +175,7 @@ class User_Controller {
 
                 const user = await User.findByCode(db, code);
                 if (!user) return res.status(400).json({ message: 'Invalid code.' });
-                if (user.code_expiration < new Date()) return res.status(400).json({ message: 'Code has expired.' });
+                if (user.code_expiration < new Date()) return res.status(400).json({ message: 'Code has expired. Please enter new code!!!' });
 
 
                 const hashPass = await bcrypt.hash(newPassword, 10);

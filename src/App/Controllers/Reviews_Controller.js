@@ -28,7 +28,7 @@ class ReviewsController {
                 const rating = Number(review.rating);
                 acc.total += rating;
                 acc.count += 1;
-                acc[rating] = (acc[rating] || 0) + 1; // Đếm số lượng đánh giá cho từng rating
+                acc[rating] = (acc[rating] || 0) + 1;
                 return acc;
             }, { total: 0, count: 0 });
 
@@ -37,18 +37,26 @@ class ReviewsController {
 
             await Tour.UpdateTourTotalRating(db, new ObjectId(id), { totalReview: roundedRating });
 
-            // Thêm user info vào review
+
             const combinedResults = await Promise.all(AllReviews.map(async (review) => {
                 const commentsForReview = AllComments.filter(comment => comment.idRating.toString() === review._id.toString());
                 const firstComment = commentsForReview.length > 0 ? commentsForReview[0] : {};
 
+                   
+
+                
+
+
                 // Lấy thông tin user dựa trên userId của review
                 const user = await User.GetUserById(db, new ObjectId(review.userId));
+console.log(user);
 
                 return {
                     _id: firstComment._id,
                     userName: user ? user.Name : "Unknown User",  // Thêm thông tin tên user
+                    userId: review.userId,
                     tourId: review.tourId,
+                    photoUrl: user.photoUrl,
                     rating: Number(review.rating),
                     likes: firstComment.likes,
                     dislikes: firstComment.dislikes,
@@ -61,7 +69,7 @@ class ReviewsController {
             combinedResults.sort((a, b) => new Date(b.Create_At) - new Date(a.Create_At));
 
             if (combinedResults.length > 0) {
-                
+
                 return res.status(200).json({ data: combinedResults }); // Gửi kết quả đã ghép với user name
             } else {
                 return res.status(200).json({ message: "No comments found" });
