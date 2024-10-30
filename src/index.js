@@ -12,8 +12,9 @@ const app = express()
 // console.log('123');
 
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials: true
+    origin: "http://localhost:5173",
+    credentials: true,
+    exposedHeaders: ['Authorization']
 }))
 
 app.use(express.json({ limit: '1000mb' }));

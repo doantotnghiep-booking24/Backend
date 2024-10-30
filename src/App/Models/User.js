@@ -1,10 +1,12 @@
 class User {
-    constructor(_id, Name, Email, Password, Role) {
+    constructor(_id, Name, Email, Password, photoUrl, Role, typeLogin) {
         this._id = _id
         this.Name = Name
         this.Email = Email
         this.Password = Password
+        this.photoUrl = photoUrl
         this.role = Role
+        this.typeLogin = typeLogin
     }
     // Register
     static async Check_UserisExist(db, Email) {
@@ -57,7 +59,7 @@ class User {
                 }
             );
             console.log(result);
-            
+
             return result;
         } catch (error) {
             console.error("Error updating verification code:", error);
@@ -68,10 +70,10 @@ class User {
 
     static async findByCode(db, code) {
         try {
-            const user = await db.collection('Users').findOne({ code: code }); 
+            const user = await db.collection('Users').findOne({ code: code });
             return user;
         } catch (error) {
-            throw new Error(error); 
+            throw new Error(error);
         }
     }
 
@@ -79,8 +81,8 @@ class User {
     static async updatePassword(db, email, newPassword) {
         try {
             const result = await db.collection('Users').updateOne(
-                { Email: email }, 
-                { $set: { Password: newPassword } } 
+                { Email: email },
+                { $set: { Password: newPassword } }
             );
             return result;
         } catch (error) {
