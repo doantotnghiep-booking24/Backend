@@ -8,6 +8,7 @@ Router.post('/Callback',Ticket_Controller.Callback)
 Router.post('/TicketStatus/:app_trans_id',Ticket_Controller.TicketStatus)
 Router.post('/CreateTicket',Ticket_Controller.CreateTicket)
 Router.post('/FindTicket/:id',Ticket_Controller.FindTicket)
+Router.post('/Refund_PaymenZalo',Ticket_Controller.Refund_PaymenZalo)
 // VNPAY
 Router.post('/create_payment_url',Ticket_Controller.create_payment_url)
 Router.get('/vnpay_return',Ticket_Controller.vnpay_return)

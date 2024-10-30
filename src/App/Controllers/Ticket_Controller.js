@@ -10,9 +10,9 @@ import qs from 'qs'
 import QueryString from 'qs'
 import dateFormat from 'dateformat'
 const config = {
-    app_id: "2553",
-    key1: "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
-    key2: "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz",
+    app_id: "2554",
+    key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
+    key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
     endpoint: "https://sb-openapi.zalopay.vn/v2/create"
 };
 let id_Custommer
@@ -83,7 +83,7 @@ class Ticket_Controller {
             description: `Zalo - Payment for the ticket #${transID}`,
             title: 'Thông tin Tour',
             bank_code: "",
-            callback_url: 'https://005a-116-105-208-12.ngrok-free.app/Ticket/Callback'
+            callback_url: 'https://6e48-116-105-208-12.ngrok-free.app/Ticket/Callback'
         };
 
         // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -124,6 +124,8 @@ class Ticket_Controller {
 
                 console.log("update ticket's status = success where app_trans_id =", dataJson["app_trans_id"]);
                 const data = JSON.parse(dataJson.item)
+                // console.log('data', data);
+
                 const id_Ticket = data[0].id_Ticket
                 // console.log(data[0]);
 
@@ -144,6 +146,38 @@ class Ticket_Controller {
 
         // thông báo kết quả cho ZaloPay server
         res.json(result);
+    }
+    async Refund_PaymenZalo(req, res, next) {
+        const config = {
+            app_id: 2554,
+            key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
+            key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
+            refund_url: "https://sb-openapi.zalopay.vn/v2/refund"
+        };
+        const timestamp = Date.now();
+        const uid = `${timestamp}${Math.floor(111 + Math.random() * 999)}`; // unique id
+
+
+        let params = {
+            app_id: config.app_id,
+            m_refund_id: `${moment().format('YYMMDD')}_${config.app_id}_${uid}`,
+            timestamp, // miliseconds
+            zp_trans_id: '241029000012841',
+            amount: '1800000',
+            description: 'ZaloPay Refund Demo',
+        };
+        // app_id|zp_trans_id|amount|description|timestamp
+        let data = params.app_id + "|" + params.zp_trans_id + "|" + params.amount + "|" + params.description + "|" + params.timestamp;
+        console.log(data);
+
+        params.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+        console.log('params', params);
+        try {
+            const result = await axios.post(config.refund_url, null, { params })
+            res.status(200).send({ Message: result.data })
+        } catch (error) {
+            res.status(400).send({ Message: error })
+        }
     }
     async TicketStatus(req, res, next) {
         const { app_trans_id } = req.params
