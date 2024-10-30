@@ -69,7 +69,6 @@ class User_Controller {
                         if (result) {
                             const AccessToken = Auth.createAccessToken(find_user.Name, find_user.Email, find_user.role)
                             const RefeshToken = Auth.GeneralRefeshToken(find_user.Name, find_user.Email, find_user.role)
-
                             const inforUser = {
                                 _id: find_user._id,
                                 Name: find_user.Name,

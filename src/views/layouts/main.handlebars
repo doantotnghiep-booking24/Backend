@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<style>
+</style>
+
+<body>
+    <header>
+        {{!-- <h1>My Website</h1>
+        <nav>
+            <a href="/">Trang chủ</a>
+            <a href="/about">Giới thiệu</a>
+            <a href="/contact">Liên hệ</a>
+        </nav> --}}
+    </header>
+
+    <main>
+        {{{body}}}
+    </main>
+
+    {{!-- <footer>
+        <p>&copy; 2024 My Website</p>
+    </footer> --}}
+
+    {{!-- <script src="/js/script.js"></script> --}}
+    <script>
+        $(document).ready(function () {
+            $('a.close').click(function (event) {
+                event.preventDefault();
+                $('.popup').hide("slow");
+            });
+        });
+    </script>
+</body>
+
+</html>
