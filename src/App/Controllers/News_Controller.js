@@ -13,6 +13,17 @@ class News_Controller {
             }
         })
     }
+    DetailNew(req, res, next) {
+        const { id } = req.params
+        Connection.connect().then(async (db) => {
+            try {
+                const detailNew = await News.Detail(db, new ObjectId(id))
+                if (detailNew) return res.status(200).json({ detailNew: detailNew })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
     CreateNew(req, res, next) {
         let Data_Image = []
         let Data_rm = []
