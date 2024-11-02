@@ -76,6 +76,7 @@ class News_Controller {
                     }
                 } else {
                     filterNews.map(data_new => {
+                        
                         filenameUpd = data_new.Image
                     })
                     for (let i = 0; i < filenameUpd.length; i++) {
@@ -103,4 +104,7 @@ class News_Controller {
         })
     }
 }
+
+
 export default new News_Controller()
+
