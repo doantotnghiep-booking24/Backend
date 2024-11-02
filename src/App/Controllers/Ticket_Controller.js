@@ -9,6 +9,8 @@ import moment from 'moment'
 import qs from 'qs'
 import QueryString from 'qs'
 import dateFormat from 'dateformat'
+import { emailService } from '../Services/emailStatus_TicketService.js'
+import User from '../Models/User.js'
 const config = {
     app_id: "2554",
     key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
@@ -23,6 +25,28 @@ class Ticket_Controller {
                 const GetTickets = await Ticket.GetTicket(db)
                 if (GetTickets) return res.status(200).send({ Tickets: GetTickets })
                 console.log(GetTickets);
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+    Update_StatusTickets(req, res, next) {
+        const { Status, id_Ticket, id_Custommer } = req.body
+        Connection.connect().then(async (db) => {
+            try {
+                const UpdateStatus = await Ticket.UpdateStatusTicket(db, Status, new ObjectId(id_Ticket))
+                if (UpdateStatus) {
+                    const Cus = await Custommers.FindCustommer(db, new ObjectId(id_Custommer))
+                    if (Cus) {
+                        const Mail_User = await User.Find_EmailUser(db, new ObjectId(Cus[0].Create_by))
+                        if (Mail_User) {
+                            const ticket = await Ticket.FindTicket(db, new ObjectId(id_Ticket))
+                            emailService.sendVerificationEmail(Mail_User[0].Email, id_Ticket, ticket.result_Find[0].Departure_Location, ticket.result_Find[0].Destination, ticket.result_Find[0].Departure_Date, ticket.result_Find[0].Departure_Time, ticket.result_Find[0].Total_DateTrip, ticket.result_Find[0].Adult_fare, ticket.result_Find[0].Children_fare, ticket.result_Find[0].Adult, ticket.result_Find[0].Children, ticket.result_Find[0].Total_price)
+                        }
+                    }
+                    return res.status(200).send({ UpdateStatus: UpdateStatus })
+                }
 
             } catch (error) {
                 console.log(error);
@@ -83,7 +107,7 @@ class Ticket_Controller {
             description: `Zalo - Payment for the ticket #${transID}`,
             title: 'Thông tin Tour',
             bank_code: "",
-            callback_url: 'https://6e48-116-105-208-12.ngrok-free.app/Ticket/Callback'
+            callback_url: 'https://c9cd-116-105-208-12.ngrok-free.app/Ticket/Callback'
         };
 
         // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -156,14 +180,15 @@ class Ticket_Controller {
         };
         const timestamp = Date.now();
         const uid = `${timestamp}${Math.floor(111 + Math.random() * 999)}`; // unique id
-
+        const amount = parseInt(req.body.amount)
+        const zp_trans_id = req.body.zp_trans_id
 
         let params = {
             app_id: config.app_id,
             m_refund_id: `${moment().format('YYMMDD')}_${config.app_id}_${uid}`,
             timestamp, // miliseconds
-            zp_trans_id: '241029000012841',
-            amount: '1800000',
+            zp_trans_id: zp_trans_id,
+            amount: amount,
             description: 'ZaloPay Refund Demo',
         };
         // app_id|zp_trans_id|amount|description|timestamp
@@ -210,10 +235,11 @@ class Ticket_Controller {
     }
     CreateTicket(req, res, next) {
         let { Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method } = req.body
+        let Status
         let isCancle
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method = null, isCancle = true)
+                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status = 'Tiếp nhận', Status_Payment, Payment_Method = null, isCancle = true)
                 const result = await Create.CreateTicket(db)
                 if (result) {
                     return res.status(200).send({ message: 'Created Success', ticKetId: result })
@@ -248,7 +274,7 @@ class Ticket_Controller {
 
         let Create_by
         Connection.connect().then(async (db) => {
-            const Info_Custommers = await new Custommers(undefined, Create_by = reqs.id_user, reqs.Name_Custommer, reqs.Date_Of_Birth, reqs.Sex_Custommer, reqs.Phone_Number, reqs.Citizen_Identification, reqs.Address)
+            const Info_Custommers = new Custommers(undefined, Create_by = reqs.id_user, reqs.Name_Custommer, reqs.Date_Of_Birth, reqs.Sex_Custommer, reqs.Phone_Number, reqs.Citizen_Identification, reqs.Address)
             const Result_Custommer = await Info_Custommers.Create(db)
             id_Custommer = Result_Custommer.insertedId
         })

@@ -36,7 +36,14 @@ class User {
             console.log('error', error);
         }
     }
+    static async Find_EmailUser(db, id_User) {
+        try {
+            return await db.collection('Users').find({ _id: id_User }).toArray()
 
+        } catch (error) {
+            console.log('error', error);
+        }
+    }
     static async GetUserById(db, id) {
         try {
             return await db.collection('Users').findOne({ _id: id })

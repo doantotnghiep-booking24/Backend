@@ -1,8 +1,10 @@
 import express from 'express'
 import Ticket_Controller from '../App/Controllers/Ticket_Controller.js'
 const Router = express.Router()
-// ZALOPAY
 Router.get('/GetAllTicket',Ticket_Controller.GetAllTicket)
+Router.post('/Update_StatusTickets',Ticket_Controller.Update_StatusTickets)
+
+// ZALOPAY
 Router.post('/PaymentZalopay',Ticket_Controller.PaymentWithZalopay)
 Router.post('/Callback',Ticket_Controller.Callback)
 Router.post('/TicketStatus/:app_trans_id',Ticket_Controller.TicketStatus)

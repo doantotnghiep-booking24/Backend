@@ -56,7 +56,7 @@ console.log(user);
                     userName: user ? user.Name : "Unknown User",  // Thêm thông tin tên user
                     userId: review.userId,
                     tourId: review.tourId,
-                    photoUrl: user.photoUrl,
+                    photoUrl: user?.photoUrl,
                     rating: Number(review.rating),
                     likes: firstComment.likes,
                     dislikes: firstComment.dislikes,
