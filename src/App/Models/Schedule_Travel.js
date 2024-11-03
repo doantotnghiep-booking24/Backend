@@ -1,8 +1,10 @@
 class Schedule_Travel {
-    constructor(_id, Name_Schedule, Location, means_of_transport) {
+    constructor(_id,Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon) {
         this._id = _id
-        this.Location = Location
-        this.means_of_transport = means_of_transport
+        this.Name_Schedule = Name_Schedule
+        this.Shedule_Morning = Shedule_Morning
+        this.Shedule_Noon = Shedule_Noon
+        this.Shedule_Afternoon = Shedule_Afternoon
     }
     static async GetSchedule_Travel(db) {
         try {
@@ -32,8 +34,10 @@ class Schedule_Travel {
                 { _id: id },
                 {
                     $set: {
-                        Location: this.Location,
-                        means_of_transport: this.means_of_transport,
+                        Name_Schedule : this.Name_Schedule,
+                        Shedule_Morning: this.Shedule_Morning,
+                        Shedule_Noon: this.Shedule_Noon,
+                        Shedule_Afternoon: this.Shedule_Afternoon,
                     }
                 }
             )

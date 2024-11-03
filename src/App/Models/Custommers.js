@@ -9,7 +9,7 @@ class Custommers {
             this.Citizen_Identification = Citizen_Identification
             this.Address = Address
     }
-    static async getAll(db) {
+    static async getCus(db) {
         try {
             const result = await db.collection('Custommers')
                 .find({})
@@ -20,10 +20,10 @@ class Custommers {
             throw (error)
         }
     }
-    static async FindCategory(db, Name_Cate) {
+    static async FindCustommer(db, id_Cus) {
         try {
-            const resultCheck = await db.collection('Custommers').findOne({ Name_Cate: Name_Cate })
-            return resultCheck ? true : false
+            const resultCheck = await db.collection('Custommers').find({ _id: id_Cus }).toArray()
+            return resultCheck 
         } catch (error) {
             console.log(error);
             throw error
