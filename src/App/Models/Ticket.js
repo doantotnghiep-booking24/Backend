@@ -1,11 +1,13 @@
 import { ObjectId } from "mongodb"
 
 class Ticket {
-    constructor(_id, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status, Status_Payment, Payment_Method, isCancle) {
+    constructor(_id, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status, Status_Payment, Payment_Method, isCancle) {
         this._id = _id
         this.Departure_Location = Departure_Location
         this.Destination = Destination
         this.Title_Tour = Title_Tour
+        this.Price_Tour = Price_Tour
+        this.After_Discount = After_Discount
         this.Departure_Date = Departure_Date
         this.Departure_Time = Departure_Time
         this.Total_DateTrip = Total_DateTrip
@@ -43,7 +45,7 @@ class Ticket {
                 { _id: id_Ticket },
                 {
                     $set: {
-                        Status : Status
+                        Status: Status
                     }
                 }
             )

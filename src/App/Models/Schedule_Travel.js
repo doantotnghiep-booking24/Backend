@@ -1,15 +1,27 @@
 class Schedule_Travel {
-    constructor(_id,Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon) {
+    constructor(_id,Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon,Location_map) {
         this._id = _id
         this.Name_Schedule = Name_Schedule
         this.Shedule_Morning = Shedule_Morning
         this.Shedule_Noon = Shedule_Noon
         this.Shedule_Afternoon = Shedule_Afternoon
+        this.Location_map = Location_map
     }
     static async GetSchedule_Travel(db) {
         try {
-            const result_Schedule_Travel = await db.collection('Schedule_Travels')
+            const result_Schedule_Travels = await db.collection('Schedule_Travels')
                 .find({})
+                .toArray()
+            return result_Schedule_Travels
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+    static async GetSchedule_Travelbyid(db,id_Schedule){
+        try {
+            const result_Schedule_Travel = await db.collection('Schedule_Travels')
+                .find({_id : id_Schedule})
                 .toArray()
             return result_Schedule_Travel
         } catch (error) {
@@ -38,6 +50,7 @@ class Schedule_Travel {
                         Shedule_Morning: this.Shedule_Morning,
                         Shedule_Noon: this.Shedule_Noon,
                         Shedule_Afternoon: this.Shedule_Afternoon,
+                        Location_map : this.Location_map
                     }
                 }
             )
