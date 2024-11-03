@@ -13,7 +13,7 @@ class Schedule_Travel {
         })
     }
     CreateSchedule_Travel(req, res, next) {
-        const {Name_Schedule, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon } = req.body
+        const {Name_Schedule,Location_map, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon } = req.body
         console.log(Time_Morning_Schedule);
         const Shedule_Morning = [{
             Time_Morning_Schedule: Time_Morning_Schedule,
@@ -29,7 +29,7 @@ class Schedule_Travel {
         }]
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Schedule(undefined,Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon)
+                const Create = new Schedule(undefined,Name_Schedule,Location_map, Shedule_Morning, Shedule_Noon, Shedule_Afternoon)
                 const result = await Create.CreateSchedule_Travel(db)
                 if (result) return res.status(200).json({ message: 'Created Success' })
             } catch (error) {
@@ -39,7 +39,7 @@ class Schedule_Travel {
     }
     UpdateSchedule_Travel(req, res, next) {
         const { id } = req.params
-        const {Name_Schedule, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon } = req.body
+        const {Name_Schedule, Location_map, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon } = req.body
         console.log(Time_Morning_Schedule);
         const Shedule_Morning = [{
             Time_Morning_Schedule: Time_Morning_Schedule,
@@ -55,7 +55,7 @@ class Schedule_Travel {
         }]
         Connection.connect().then(async (db) => {
             try {
-                const Update = new Schedule(undefined,Name_Schedule, Shedule_Morning, Shedule_Noon,Shedule_Afternoon)
+                const Update = new Schedule(undefined, Location_map, Name_Schedule, Shedule_Morning, Shedule_Noon,Shedule_Afternoon)
                 const result = await Update.UpdateSchedule_Travel(db, new ObjectId(id))
                 if (result) return res.status(200).json({ message: 'Updated Success' })
             } catch (error) {
