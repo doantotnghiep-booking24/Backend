@@ -68,5 +68,11 @@ class News {
             throw error
         }
     }
+    static async Detail(db, id) {
+        const resultDetail = await db.collection('News')
+            .find({ _id: id })
+            .toArray()
+        return resultDetail
+    }
 }
 export default News

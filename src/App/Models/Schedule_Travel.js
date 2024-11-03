@@ -1,7 +1,8 @@
 class Schedule_Travel {
-    constructor(_id,Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon) {
+    constructor(_id,Name_Schedule,Location_map, Shedule_Morning, Shedule_Noon, Shedule_Afternoon) {
         this._id = _id
         this.Name_Schedule = Name_Schedule
+        this.Location_map = Location_map
         this.Shedule_Morning = Shedule_Morning
         this.Shedule_Noon = Shedule_Noon
         this.Shedule_Afternoon = Shedule_Afternoon
@@ -35,6 +36,7 @@ class Schedule_Travel {
                 {
                     $set: {
                         Name_Schedule : this.Name_Schedule,
+                        Location_map: this.Location_map,
                         Shedule_Morning: this.Shedule_Morning,
                         Shedule_Noon: this.Shedule_Noon,
                         Shedule_Afternoon: this.Shedule_Afternoon,
