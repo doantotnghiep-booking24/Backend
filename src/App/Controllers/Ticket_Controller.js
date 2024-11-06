@@ -11,6 +11,7 @@ import QueryString from 'qs'
 import dateFormat from 'dateformat'
 import { emailService } from '../Services/emailStatus_TicketService.js'
 import User from '../Models/User.js'
+import { json } from 'express'
 const config = {
     app_id: "2554",
     key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
@@ -86,7 +87,6 @@ class Ticket_Controller {
             Address
         }
         console.log(Name_Custommer);
-
         Connection.connect().then(async (db) => {
             const Info_Custommers = await new Custommers(undefined, Custommer.Create_by = Ticket_tour[0].id_user, Custommer.Name_Custommer, Custommer.Date_Of_Birth, Custommer.Sex_Custommer, Custommer.Phone_Number, Custommer.Citizen_Identification, Custommer.Address)
             const Result_Custommer = await Info_Custommers.Create(db)
@@ -239,7 +239,7 @@ class Ticket_Controller {
         let isCancle
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status = 'Tiếp nhận', Status_Payment, Payment_Method = null, isCancle = true)
+                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status = 'Tiếp nhận', Status_Payment, Payment_Method = null, isCancle = false)
                 const result = await Create.CreateTicket(db)
                 if (result) {
                     return res.status(200).send({ message: 'Created Success', ticKetId: result })
@@ -373,6 +373,8 @@ class Ticket_Controller {
         if (secureHash === signed) {
             //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
             const Ticket_id = vnp_Params['vnp_TxnRef']
+            console.log('Ticket_id', Ticket_id);
+
             Connection.connect().then(async (db) => {
                 if (id_Custommer) {
                     const result_status = await Ticket.UpdateTicket(db, new ObjectId(Ticket_id), id_Custommer, 'Đã Thanh Toán', 'Payment with Vnpay')
@@ -402,6 +404,189 @@ class Ticket_Controller {
 
             return sorted;
         }
+    }
+    async Vnpay_Query(req, res, next) {
+        process.env.TZ = "Asia/Ho_Chi_Minh";
+        let date = new Date();
+
+
+        let vnp_TmnCode = 'K0OW2EW2'
+        let secretKey = 'E3CXY1RMHAWX42E8EKJZRPUPTPX8O31M'
+        let vnp_Api = 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction'
+
+        let vnp_TxnRef = req.body.orderId;
+        let vnp_TransactionDate = moment(date).format("HHmmss")
+
+        let vnp_RequestId = moment(date).format("HHmmss");
+        let vnp_Version = "2.1.0";
+        let vnp_Command = "querydr";
+        let vnp_OrderInfo = "Truy van GD ma:" + vnp_TxnRef;
+
+        let vnp_IpAddr =
+            req.headers["x-forwarded-for"] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        let currCode = "VND";
+        let vnp_CreateDate = moment(date).format("YYYYMMDDHHmmss");
+
+        let data =
+            vnp_RequestId +
+            "|" +
+            vnp_Version +
+            "|" +
+            vnp_Command +
+            "|" +
+            vnp_TmnCode +
+            "|" +
+            vnp_TxnRef +
+            "|" +
+            vnp_TransactionDate +
+            "|" +
+            vnp_CreateDate +
+            "|" +
+            vnp_IpAddr +
+            "|" +
+            vnp_OrderInfo;
+
+        let hmac = crypto.createHmac("sha512", secretKey);
+        let vnp_SecureHash = hmac.update(new Buffer(data, "utf-8")).digest("hex");
+
+        let dataObj = {
+            vnp_RequestId: vnp_RequestId,
+            vnp_Version: vnp_Version,
+            vnp_Command: vnp_Command,
+            vnp_TmnCode: vnp_TmnCode,
+            vnp_TxnRef: vnp_TxnRef,
+            vnp_OrderInfo: vnp_OrderInfo,
+            vnp_TransactionDate: vnp_TransactionDate,
+            vnp_CreateDate: vnp_CreateDate,
+            vnp_IpAddr: vnp_IpAddr,
+            vnp_SecureHash: vnp_SecureHash,
+        };
+        // /merchant_webapi/api/transaction
+        try {
+            const res = await axios.post(`https://sandbox.vnpayment.vn/merchant_webapi/api/transaction`, { dataObj })
+            // res.status(200).send({ message: res.data })
+            console.log(res.data);
+
+        } catch (error) {
+            // res.status(500).send({ message: error })
+            // console.log(error);
+
+        }
+        // request(
+        //     {
+        //         url: vnp_Api,
+        //         method: "POST",
+        //         json: true,
+        //         body: dataObj,
+        //     },
+        //     function (error, response, body) {
+        //         console.log(response);
+        //     }
+        // );
+    }
+    async Vnpay_refund(req, res, next) {
+        process.env.TZ = "Asia/Ho_Chi_Minh";
+        let date = new Date();
+        let vnp_TmnCode = 'K0OW2EW2'
+        let secretKey = 'E3CXY1RMHAWX42E8EKJZRPUPTPX8O31M'
+        let vnp_Api = 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction'
+
+        let vnp_TxnRef = req.body.orderId;
+        let vnp_TransactionDate = moment(date).format("HHmmss");
+        let vnp_Amount = req.body.amount * 100;
+        let vnp_TransactionType = 2;
+        let vnp_CreateBy = req.body.user;
+        console.log(vnp_TxnRef, vnp_Amount, vnp_CreateBy);
+
+        let currCode = "VND";
+
+        let vnp_RequestId = moment(date).format("HHmmss");
+        let vnp_Version = "2.1.0";
+        let vnp_Command = "refund";
+        let vnp_OrderInfo = "Hoan tien GD ma:" + vnp_TxnRef;
+
+        let vnp_IpAddr =
+            req.headers["x-forwarded-for"] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        let vnp_CreateDate = moment(date).format("YYYYMMDDHHmmss");
+
+        let vnp_TransactionNo = "0";
+
+        let data =
+            vnp_RequestId +
+            "|" +
+            vnp_Version +
+            "|" +
+            vnp_Command +
+            "|" +
+            vnp_TmnCode +
+            "|" +
+            vnp_TransactionType +
+            "|" +
+            vnp_TxnRef +
+            "|" +
+            vnp_Amount +
+            "|" +
+            vnp_TransactionNo +
+            "|" +
+            vnp_TransactionDate +
+            "|" +
+            vnp_CreateBy +
+            "|" +
+            vnp_CreateDate +
+            "|" +
+            vnp_IpAddr +
+            "|" +
+            vnp_OrderInfo;
+        let hmac = crypto.createHmac("sha512", secretKey);
+        let vnp_SecureHash = hmac.update(new Buffer(data, "utf-8")).digest("hex");
+
+        let dataObj = {
+            vnp_RequestId: vnp_RequestId,
+            vnp_Version: vnp_Version,
+            vnp_Command: vnp_Command,
+            vnp_TmnCode: vnp_TmnCode,
+            vnp_TransactionType: vnp_TransactionType,
+            vnp_TxnRef: vnp_TxnRef,
+            vnp_Amount: vnp_Amount,
+            vnp_TransactionNo: vnp_TransactionNo,
+            vnp_CreateBy: vnp_CreateBy,
+            vnp_OrderInfo: vnp_OrderInfo,
+            vnp_TransactionDate: vnp_TransactionDate,
+            vnp_CreateDate: vnp_CreateDate,
+            vnp_IpAddr: vnp_IpAddr,
+            vnp_SecureHash: vnp_SecureHash,
+        };
+        console.log('dataObj', dataObj);
+
+        try {
+            const res = await axios.post(`https://sandbox.vnpayment.vn/merchant_webapi/api/transaction`, { dataObj })
+            // res.status(200).send({ message: res.data })
+            console.log(res.data);
+
+        } catch (error) {
+            // res.status(500).send({ message: error })
+            // console.log(error);
+
+        }
+        // request(
+        //     {
+        //         url: vnp_Api,
+        //         method: "POST",
+        //         json: true,
+        //         body: dataObj,
+        //     },
+        //     function (error, response, body) {
+        //         console.log(response);
+        //     }
+        // );
     }
     async MomoPayment(req, res, next) {
         //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method

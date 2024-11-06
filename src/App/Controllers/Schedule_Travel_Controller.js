@@ -5,19 +5,19 @@ class Schedule_Travel {
     GetAllSchedule_Travel(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
-                const GetSchedule_Travels = await Schedule.GetSchedule_Travel(db)
-                if (GetSchedule_Travel) return res.status(200).json({ Schedule_Travels: GetSchedule_Travels })
+                const GetSchedule_Travel = await Schedule.GetSchedule_Travel(db)
+                if (GetSchedule_Travel) return res.status(200).json({ Schedule_Travel: GetSchedule_Travel })
             } catch (error) {
                 console.log(error);
             }
         })
     }
-    GetSchedule_Travel(req, res, next) {
-        const { id } = req.params
+    GetSchedule_TravelByid(req, res, next) {
+        const { id } = req.params  
         Connection.connect().then(async (db) => {
             try {
-                const GetSchedule_Travel = await Schedule.GetSchedule_Travelbyid(db, id)
-                if (GetSchedule_Travel) return res.status(200).json({ Schedule_Travel: GetSchedule_Travel })
+                const Schedule_TravelByid = await Schedule.GetSchedule_Travelbyid(db, new ObjectId(id))
+                if (Schedule_TravelByid) return res.status(200).json({ Schedule_Travelbyid: Schedule_TravelByid })
             } catch (error) {
                 console.log(error);
             }
@@ -50,7 +50,7 @@ class Schedule_Travel {
     }
     UpdateSchedule_Travel(req, res, next) {
         const { id } = req.params
-        const { Name_Schedule, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon, Location_map } = req.body
+        const { Name_Schedule, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon,Location_map } = req.body
         console.log(Time_Morning_Schedule);
         const Shedule_Morning = [{
             Time_Morning_Schedule: Time_Morning_Schedule,
@@ -66,7 +66,7 @@ class Schedule_Travel {
         }]
         Connection.connect().then(async (db) => {
             try {
-                const Update = new Schedule(undefined, Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon, Location_map)
+                const Update = new Schedule(undefined, Name_Schedule, Shedule_Morning, Shedule_Noon, Shedule_Afternoon,Location_map)
                 const result = await Update.UpdateSchedule_Travel(db, new ObjectId(id))
                 if (result) return res.status(200).json({ message: 'Updated Success' })
             } catch (error) {

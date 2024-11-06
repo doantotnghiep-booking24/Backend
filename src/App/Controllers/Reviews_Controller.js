@@ -49,7 +49,7 @@ class ReviewsController {
 
                 // Lấy thông tin user dựa trên userId của review
                 const user = await User.GetUserById(db, new ObjectId(review.userId));
-console.log(user);
+// console.log(user);
 
                 return {
                     _id: firstComment._id,

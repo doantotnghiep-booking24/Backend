@@ -10,6 +10,8 @@ import TypeTour from './TypeTour.Route.js'
 import Ticket from './Ticket.Route.js'
 import Review from "./Reviews.Route.js"
 import Custommer from './Custommer.Route.js'
+import Hotel from './Hotel.Route.js'
+import TourFavourite from './TourFavourite.Route.js'
 const Route = (app) => {
     app.use('/V1/Review', Review)
     app.use('/V1/Tours', Tour)
@@ -17,12 +19,14 @@ const Route = (app) => {
     app.use('/V2/Featured_Location',Featured_Location)
     app.use('/V2/TypeTour',TypeTour)
     app.use('/Services',Service)
+    app.use('/TourFavourites',TourFavourite)
     app.use('/Custommer',Custommer)
     app.use('/Schedules',Schedule)
     app.use('/Vouchers',Voucher)
     app.use('/Ticket',Ticket)
     app.use('/User', User)
     app.use('/News', News)
+    app.use('/Hotel',Hotel)
     app.use('/', Tour)
 }
 export default Route

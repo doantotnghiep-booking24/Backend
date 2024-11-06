@@ -58,6 +58,8 @@ class Tour {
                 .sort({ Price_Tour: 1 })
                 .toArray()
             const response = GetTours_Related.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Voucher, item.id_Category, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.After_Discount, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date, item.totalReview))
+            // console.log(response);
+            
             return response
         } catch (error) {
             console.log(error);
