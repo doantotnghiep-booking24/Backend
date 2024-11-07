@@ -8,7 +8,6 @@ function Admin(req, res, next) {
         // console.log('You are not Admin, dont permission');
         return res.status(400).json('You are not Admin ,dont have permission')
     }
-
 }
 
 export default Admin;

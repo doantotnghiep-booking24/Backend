@@ -105,10 +105,23 @@ class News_Controller {
     }
     DeleteNew(req, res, next) {
         const { id } = req.params
+        let filenamedlt
         Connection.connect().then(async (db) => {
             try {
-                const DeleteNew = await News.Delete(db, new ObjectId(id))
-                if (DeleteNew) return res.status(200).json({ message: 'Delete Success' })
+                const filterNews = await db.collection('News').find({ _id: new ObjectId(id) },).toArray()
+                const DeleteNews = News.Delete(db, new ObjectId(id))
+                if (DeleteNews) {
+                    filterNews.map(News => {
+                        filenamedlt = News.Image
+                    })
+                    for (let i = 0; i < filenamedlt?.length; i++) {
+                        cloudinary.api.delete_resources(filenamedlt[i]?.filename, (error, result) => {
+                            console.log('error', error);
+                            console.log('result', result);
+                        })
+                    }
+                    return res.status(200).json({ message: 'Delete Success' })
+                }
             } catch (error) {
                 console.log(error);
             }

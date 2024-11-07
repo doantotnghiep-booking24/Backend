@@ -14,6 +14,8 @@ Router.post('/Refund_PaymenZalo',Ticket_Controller.Refund_PaymenZalo)
 // VNPAY
 Router.post('/create_payment_url',Ticket_Controller.create_payment_url)
 Router.get('/vnpay_return',Ticket_Controller.vnpay_return)
+Router.post('/refund',Ticket_Controller.Vnpay_refund)
+Router.post('/Vnpay_Query',Ticket_Controller.Vnpay_Query)
 // PAYMENT DIRECT
 Router.post('/Direct_PaymentTicket',Ticket_Controller.Direct_PaymentTicket)
 
