@@ -64,6 +64,7 @@ class Tour_Controller {
                 }
             } catch (error) {
                 console.log(error);
+                
             }
         })
     }
