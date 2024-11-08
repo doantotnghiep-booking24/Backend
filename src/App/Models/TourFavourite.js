@@ -51,7 +51,7 @@ class TourFavourite {
     // }
     static async Delete(db, id) {
         try {
-            const Delete = await db.collection('TourFavourites').deleteOne({ id_User: id })
+            const Delete = await db.collection('TourFavourites').deleteOne({ _id: id })
             return Delete
         } catch (error) {
             console.log(error);
