@@ -63,8 +63,7 @@ class Tour_Controller {
                     return res.status(200).json({ message: "Delete Success" })
                 }
             } catch (error) {
-                console.log(error);
-                
+                console.log(error); 
             }
         })
     }
