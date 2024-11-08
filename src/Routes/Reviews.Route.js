@@ -2,13 +2,15 @@ import express from 'express'
 import Reviews_Controller from '../App/Controllers/Reviews_Controller.js'
 import uploadCloudComment from '../App/MiddleWare/ImageComment.js'
 import Auth from "../App/MiddleWare/Jwt/Auth.js"
+import Admin from '../App/MiddleWare/Decentralization/Admin.js'
+import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
 const Router = express.Router()
 
 
 
-Router.get('/GetReview/:id', Reviews_Controller.GetAllReviews)  // Vd :  http://localhost:3001/V1/Review/GetReview
+Router.get('/GetReview/:id', AuthUser(["Admin", "User"]), Reviews_Controller.GetAllReviews)  // Vd :  http://localhost:3001/V1/Review/GetReview
 
-Router.post('/AddNewReview', uploadCloudComment.array('Image'), (req, res) => {
+Router.post('/AddNewReview', AuthUser(["Admin", "User"]), uploadCloudComment.array('Image'), (req, res) => {
     req.io = req.app.get('io'); // Lấy io từ app
     Reviews_Controller.CreateNew(req, res);
 });  // Vd :  http://localhost:3001/V1/Review/AddNewReview

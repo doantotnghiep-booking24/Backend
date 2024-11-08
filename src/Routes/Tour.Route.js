@@ -1,15 +1,18 @@
 import express from 'express'
 import Tour_Controller from '../App/Controllers/Tour_Controller.js'
 import uploadCloud from '../App/MiddleWare/Cloundinary.js'
+import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
 const Router = express.Router()
 
 Router.get('/GetTours', Tour_Controller.GetAllTour)  // Vd :  http://localhost:3001/V1/Tours/GetTours?page=1&limit=1
-Router.get('/SearchTour', Tour_Controller.SearchTour) // Vd :  V1/Tours/SearchTour?page=1&limit=2&NameSearch=h&PriceSearch= 250000
-Router.get('/DetailTour/:id', Tour_Controller.DetailTour) // Vd : V1/Tours/DetailTour/669a3bad03ec7167578570d8
-Router.get('/AllComment/:id', Tour_Controller.getAllComments) // Vd : V1/Tours/AllComment/669a3bad03ec7167578570d8
-Router.post('/CreateTour',uploadCloud.array('Image_Tour'), Tour_Controller.Create_Tour)
-Router.post('/Update/:id',uploadCloud.array('Image_Tour'), Tour_Controller.UpdateTour) // Vd : V1/Tours/Update/669a3bad03ec7167578570d8
-Router.post('/Delete/:id', Tour_Controller.DeleteTour) // Vd : V1/Tours/Delete/669a3bad03ec7167578570d8
+Router.get('/SearchTour', AuthUser(["Admin", "User"]), Tour_Controller.SearchTour) // Vd :  V1/Tours/SearchTour?page=1&limit=2&NameSearch=h&PriceSearch= 250000
+Router.get('/DetailTour/:id', AuthUser(["Admin", "User"]), Tour_Controller.DetailTour) // Vd : V1/Tours/DetailTour/669a3bad03ec7167578570d8
+Router.get('/AllComment/:id', AuthUser(["Admin", "User"]), Tour_Controller.getAllComments) // Vd : V1/Tours/AllComment/669a3bad03ec7167578570d8
+Router.post('/CreateTour', AuthUser(["Admin"]), uploadCloud.array('Image_Tour'), Tour_Controller.Create_Tour)
+Router.post('/Update/:id', AuthUser(["Admin"]), uploadCloud.array('Image_Tour'), Tour_Controller.UpdateTour) // Vd : V1/Tours/Update/669a3bad03ec7167578570d8
+Router.post('/Delete/:id', AuthUser(["Admin"]), Tour_Controller.DeleteTour) // Vd : V1/Tours/Delete/669a3bad03ec7167578570d8
+Router.post('/Restore/:id', AuthUser(["Admin"]), Tour_Controller.DeleteTour) // Vd : V1/Tours/Delete/669a3bad03ec7167578570d8
+Router.post('/Remove/:id', AuthUser(["Admin"]), Tour_Controller.RemoveTour) // Vd : V1/Tours/Delete/669a3bad03ec7167578570d8
 Router.get('/', Tour_Controller.GetAllTour)
 
 export default Router

@@ -19,7 +19,7 @@ class Tour_Controller {
                     Data_rm.push(filesData[i].filename)
                 }
                 Image_Tour = Data_Image
-                const Create_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date)
+                const Create_Tour = new Tour(undefined, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, parseInt(Price_Tour), After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date, false)
                 const result = await Create_Tour.CreateTour(db)
                 if (!result) {
                     if (filesData) {
@@ -42,12 +42,12 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllTour = await Tour.ShowAll(db, parseInt(page), parseInt(limit))
-                // console.log(AllTour);
-                
+                console.log(AllTour);
+
                 if (AllTour) {
                     return res.status(200).json({ Tours: AllTour })
-                }else{
-                    return res.status(400).json({Message : 'Error'})
+                } else {
+                    return res.status(400).json({ Message: 'Error' })
                 }
             } catch (error) {
                 console.log(error);
@@ -172,7 +172,8 @@ class Tour_Controller {
                 return {
                     _id: firstComment._id,
                     userId: review.userId,
-                    userName: user ? user.Name : "Unknown User",  // Thêm tên người dùng
+                    userName: user ? user.Name : "Unknown User",
+                    photoUrl: user ? user.photoUrl : "",
                     tourId: review.tourId,
                     rating: Number(review.rating),
                     likes: firstComment.likes,
@@ -185,6 +186,8 @@ class Tour_Controller {
 
             // Trả về kết quả
             if (combinedResults.length > 0) {
+
+
                 return res.status(200).json({ data: combinedResults }); // Gửi kết quả đã ghép
             } else {
                 return res.status(200).json({ message: "No 5-star comments" });
@@ -195,6 +198,22 @@ class Tour_Controller {
             return res.status(500).send({ message: "Internal Server Error" });
         }
     }
+
+    async RemoveTour(req, res) {
+        const { id } = req.params
+
+        Connection.connect().then(async (db) => {
+            try {
+                const Remove_Tour = await Tour.Remove(db, new ObjectId(id))
+                if (Remove_Tour) {
+                    return res.status(200).json({ message: "Remove Success" })
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+
 
 
 }

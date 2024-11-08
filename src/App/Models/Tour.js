@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb"
 class Tour {
-    constructor(_id, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date, totalReview) {
+    constructor(_id, id_Schedule_Travel, id_Voucher, id_Category, id_Type_Tour, Name_Tour, Price_Tour, After_Discount, Image_Tour, Title_Tour, Description_Tour, Start_Tour, End_Tour, total_Date, totalReview, isDeleted = false) {
         this._id = _id
         this.id_Schedule_Travel = id_Schedule_Travel
         this.id_Voucher = id_Voucher
@@ -14,8 +14,9 @@ class Tour {
         this.Description_Tour = Description_Tour
         this.Start_Tour = Start_Tour
         this.End_Tour = End_Tour
-        this.total_Date = total_Date,
-            this.totalReview = totalReview
+        this.total_Date = total_Date
+        this.totalReview = totalReview
+        this.isDeleted = isDeleted
     }
     async CreateTour(db) {
         try {
@@ -31,13 +32,13 @@ class Tour {
 
     static async ShowAll(db, page, limit) {
         try {
-            const ResultGetTours = await db.collection('Tours').find({})
+            const ResultGetTours = await db.collection('Tours').find()
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .sort({ Price_Tour: 1 })
                 .toArray()
             const totalItems = await db.collection('Tours').countDocuments({})
-            const response = ResultGetTours.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Voucher, item.id_Category, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.After_Discount, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date, item.totalReview))
+            const response = ResultGetTours.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Voucher, item.id_Category, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.After_Discount, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date, item.totalReview, item.isDeleted))
 
             return {
                 totalItems: totalItems,
@@ -52,9 +53,33 @@ class Tour {
     }
 
     static async Delete(db, id) {
+
         try {
-            const Result_Delete = await db.collection('Tours').deleteOne({ _id: id })
-            return Result_Delete
+            const findIsDeleted = await db.collection('Tours').findOne({ _id: id });
+
+            if (!findIsDeleted) {
+                throw new Error("Document not found");
+            }
+
+            let Result_Update;
+
+            if (findIsDeleted.isDeleted) {
+                // Khôi phục nếu isDeleted là true
+                Result_Update = await db.collection('Tours').updateOne(
+                    { _id: id },
+                    { $set: { isDeleted: false } }
+                );
+                console.log("Document restored");
+            } else {
+                // Đánh dấu là đã xóa nếu isDeleted là false
+                Result_Update = await db.collection('Tours').updateOne(
+                    { _id: id },
+                    { $set: { isDeleted: true } }
+                );
+                console.log("Document marked as deleted");
+            }
+
+            return Result_Update;
         } catch (error) {
             console.log(error);
             throw (error)
@@ -150,6 +175,16 @@ class Tour {
             .sort({ Price_Tour: -1 })
             .toArray()
         return resultDetail
+    }
+
+    static async Remove(db, id) {
+        try {
+            const Result_Delete = await db.collection('Tours').deleteOne({ _id: id },)
+            return Result_Delete
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
     }
 }
 

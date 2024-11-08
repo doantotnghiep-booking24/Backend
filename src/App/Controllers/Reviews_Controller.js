@@ -42,21 +42,16 @@ class ReviewsController {
                 const commentsForReview = AllComments.filter(comment => comment.idRating.toString() === review._id.toString());
                 const firstComment = commentsForReview.length > 0 ? commentsForReview[0] : {};
 
-                   
-
-                
-
-
                 // Lấy thông tin user dựa trên userId của review
                 const user = await User.GetUserById(db, new ObjectId(review.userId));
-console.log(user);
+
 
                 return {
                     _id: firstComment._id,
-                    userName: user ? user.Name : "Unknown User",  // Thêm thông tin tên user
+                    userName: user ? user.Name : "Anonymous",  // Thêm thông tin tên user
                     userId: review.userId,
                     tourId: review.tourId,
-                    photoUrl: user.photoUrl,
+                    photoUrl: user ? user.photoUrl : "",
                     rating: Number(review.rating),
                     likes: firstComment.likes,
                     dislikes: firstComment.dislikes,

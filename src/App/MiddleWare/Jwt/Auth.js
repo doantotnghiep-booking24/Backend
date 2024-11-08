@@ -27,7 +27,7 @@ class Auth {
             role: role
         }
 
-        const RefeshToken = jwt.sign(Payload, process.env.SECRET_KEY_REFESH_TOKEN, { expiresIn: '1d' })
+        const RefeshToken = jwt.sign(Payload, process.env.SECRET_KEY_REFESH_TOKEN, { expiresIn: '7d' })
 
         return RefeshToken
     }

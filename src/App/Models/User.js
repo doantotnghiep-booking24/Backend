@@ -89,6 +89,27 @@ class User {
             throw new Error(error);
         }
     }
+    static async FindOneByUpdate(db, id, data) {
+        try {
+            const result = await db.collection('Users').updateOne(
+                { _id: id },
+                { $set: data },
 
+            );
+            if (result.modifiedCount > 0) {
+
+                const updatedField = Object.keys(data)[0];
+                const updatedUser = await db.collection('Users').findOne(
+                    { _id: id },
+                    { projection: { [updatedField]: 1 } }
+                );
+                return updatedUser ? data : null;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }
 export default User
