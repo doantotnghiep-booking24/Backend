@@ -42,10 +42,24 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllTour = await Tour.ShowAll(db, parseInt(page), parseInt(limit))
-                console.log(AllTour);
+
 
                 if (AllTour) {
                     return res.status(200).json({ Tours: AllTour })
+                } else {
+                    return res.status(400).json({ Message: 'Error' })
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+    GetTours_Related(req, res) {
+        Connection.connect().then(async (db) => {
+            try {
+                const AllTour_Related = await Tour.GetTours_Related(db)
+                if (AllTour_Related) {
+                    return res.status(200).json({ Tours_Related: AllTour_Related })
                 } else {
                     return res.status(400).json({ Message: 'Error' })
                 }
