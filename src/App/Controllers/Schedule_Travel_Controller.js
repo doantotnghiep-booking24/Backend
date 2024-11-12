@@ -19,7 +19,7 @@ class Schedule_Travel {
                 const Schedule_TravelByid = await Schedule.GetSchedule_Travelbyid(db, new ObjectId(id))
                 if (Schedule_TravelByid) return res.status(200).json({ Schedule_Travelbyid: Schedule_TravelByid })
             } catch (error) {
-                console.log(error);
+                console.log(error)
             }
         })
     }

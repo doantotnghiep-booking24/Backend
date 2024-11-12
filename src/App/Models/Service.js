@@ -1,7 +1,8 @@
 class Service {
-    constructor(_id, NameService) {
+    constructor(_id, Name_Service, Price_Service) {
         this._id = _id
-        this.NameService = NameService
+        this.Name_Service = Name_Service
+        this.Price_Service = Price_Service
     }
     
    static async GetServices(db) {
@@ -15,9 +16,9 @@ class Service {
             throw error
         }
     }
-    static async FindService(db,NameService){
+    static async FindService(db,Name_Service){
         try {
-            const resultCheck = await db.collection('Services').findOne({NameService : NameService})
+            const resultCheck = await db.collection('Services').findOne({Name_Service : Name_Service})
             return resultCheck ? true : false
         } catch (error) {
             console.log(error);
@@ -40,7 +41,8 @@ class Service {
                     { _id: id },
                     {
                         $set: {
-                            NameService: this.NameService
+                            Name_Service: this.Name_Service,
+                            Price_Service: this.Price_Service
                         }
                     }
                 )
@@ -52,9 +54,9 @@ class Service {
     }
     static async DeleteService(db, id) {
         try {
-            const reuslt_Delete = await db.collection('Services')
+            const result_Delete = await db.collection('Services')
                 .deleteOne({ _id: id })
-            return reuslt_Delete
+            return result_Delete
         } catch (error) {
             console.log(error);
             throw error
