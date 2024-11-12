@@ -46,6 +46,7 @@ class Auth {
             console.log(`Token from Header: ${token}`);
         }
 
+
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized' }); // Nếu không có token, trả về lỗi Unauthorized
         }
@@ -54,10 +55,13 @@ class Auth {
         jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN, (err, decoded) => {
             if (err) {
                 console.error(err);
-                
                 return res.status(403).json({ message: err }); // Nếu token không hợp lệ, trả về lỗi
             } else {
+                console.log(decoded);
+                
                 req.email = decoded.email; // Lưu thông tin email từ token vào req
+                req.name = decoded.name;
+                req.role = decoded.role;
                 next(); // Tiếp tục tới middleware hoặc route tiếp theo
             }
         });

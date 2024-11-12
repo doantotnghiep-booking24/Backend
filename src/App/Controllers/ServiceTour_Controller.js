@@ -53,5 +53,17 @@ class ServiceTour_Controller {
          }
       })
    }
+
+   RemoveService(req, res) {
+      const { id } = req.params
+      Connection.connect().then(async (db) => {
+         try {
+            const Delete = Service.RemoveService(db, new ObjectId(id))
+            if (Delete) return res.status(200).json({ message: 'Deleted Success' })
+         } catch (error) {
+            console.log(error);
+         }
+      })
+   }
 }
 export default new ServiceTour_Controller()

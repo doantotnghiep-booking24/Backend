@@ -1,5 +1,5 @@
 class Voucher {
-    constructor(_id, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition,isexpired) {
+    constructor(_id, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition, isexpired, isDeleted = false) {
         this._id = _id
         this.Code_Voucher = Code_Voucher
         this.Description = Description
@@ -10,6 +10,7 @@ class Voucher {
         this.Max_Usage = Max_Usage
         this.Condition = Condition
         this.isexpired = isexpired
+        this.isDeleted = isDeleted
     }
     static async getAll(db) {
         try {
@@ -63,6 +64,24 @@ class Voucher {
     static async Delete(db, id) {
         try {
             const Delete = await db.collection('Voucher').deleteOne({ _id: id })
+            return Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+
+    static async Remove(db, id) {
+        try {
+            let Delete;
+            const findIsDeleted = await db.collection('Voucher').findOne({ _id: id });
+
+            if (findIsDeleted.isDeleted === false) {
+                Delete = await db.collection('Voucher').updateOne({ _id: id }, { $set: { isDeleted: true } })
+            } else {
+                Delete = await db.collection('Voucher').updateOne({ _id: id }, { $set: { isDeleted: false } })
+            }
+
             return Delete
         } catch (error) {
             console.log(error);

@@ -1,12 +1,13 @@
 import { v2 as cloudinary } from 'cloudinary';
 class News {
-    constructor(_id, Name, Title, Content, Image, Cretate_At) {
+    constructor(_id, Name, Title, Content, Image, Cretate_At, isDeleted = false) {
         this._id = _id
         this.Name = Name
         this.Title = Title
         this.Content = Content
         this.Image = Image
         this.Cretate_At = Cretate_At
+        this.isDeleted = isDeleted
     }
     static async getAll(db) {
         try {
@@ -57,7 +58,7 @@ class News {
                     })
                     for (let i = 0; i < filenameRm.length; i++) {
                         cloudinary.api.delete_resources(filenameRm[i].filename, (error, result) => {
-                         console.log(result);
+                            console.log(result);
                         })
                     }
                 }
@@ -73,6 +74,23 @@ class News {
             .find({ _id: id })
             .toArray()
         return resultDetail
+    }
+    static async Remove(db, id) {
+        try {
+            let Delete;
+            const Data_ImageRm = await db.collection('News').findOne({ _id: id });
+
+            if (Data_ImageRm.isDeleted === false) {
+                Delete = await db.collection('News').updateOne({ _id: id }, { $set: { isDeleted: true } })
+            } else {
+                Delete = await db.collection('News').updateOne({ _id: id }, { $set: { isDeleted: false } })
+            }
+
+            return Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
     }
 }
 export default News
