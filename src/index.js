@@ -42,7 +42,6 @@ Connection.connect().then(async (db) => {
                     }
                 })
                 console.log(voucher.Code_Voucher, 'đã hết hiệu lực');
-
             } else {
                 db.collection('Voucher').updateOne({ _id: new ObjectId(voucher._id) }, {
                     $set: {

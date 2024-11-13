@@ -56,9 +56,7 @@ class Auth {
             if (err) {
                 console.error(err);
                 return res.status(403).json({ message: err }); // Nếu token không hợp lệ, trả về lỗi
-            } else {
-                console.log(decoded);
-                
+            } else {             
                 req.email = decoded.email; // Lưu thông tin email từ token vào req
                 req.name = decoded.name;
                 req.role = decoded.role;
