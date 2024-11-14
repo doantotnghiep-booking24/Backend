@@ -45,13 +45,12 @@ class ReviewsController {
                 // Lấy thông tin user dựa trên userId của review
                 const user = await User.GetUserById(db, new ObjectId(review.userId));
 
-
                 return {
                     _id: firstComment._id,
                     userName: user ? user.Name : "Anonymous",  // Thêm thông tin tên user
                     userId: review.userId,
                     tourId: review.tourId,
-                    photoUrl: user ? user.photoUrl : "",
+                    photoUrl: user?.photoUrl,
                     rating: Number(review.rating),
                     likes: firstComment.likes,
                     dislikes: firstComment.dislikes,

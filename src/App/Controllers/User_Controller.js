@@ -78,7 +78,7 @@ class User_Controller {
                                 _id: find_user._id,
                                 Name: find_user.Name,
                                 Email: find_user.Email,
-                                Role: find_user.role,
+                                role : find_user.role,
                                 AccessToken,
                                 RefeshToken
                             }
@@ -226,6 +226,7 @@ class User_Controller {
                         Name: findUser.Name,
                         Email: findUser.Email,
                         photoUrl: findUser.photoUrl,
+                        role : findUser.role,
                         AccessToken,
                         RefreshToken
                     };
@@ -248,6 +249,7 @@ class User_Controller {
                         Name: getNewUser.Name,
                         Email: getNewUser.Email,
                         photoUrl: getNewUser.photoUrl,
+                        role : getNewUser.role,
                         accessToken,
                         refreshToken
                     };
@@ -287,6 +289,7 @@ class User_Controller {
                         Name: findUser.Name,
                         Email: findUser.Email,
                         photoUrl: findUser.photoUrl,
+                        role : findUser.role,
                         AccessToken,
                         RefreshToken
                     };
@@ -309,6 +312,7 @@ class User_Controller {
                         Name: getNewUser.Name,
                         Email: getNewUser.Email,
                         photoUrl: getNewUser.photoUrl,
+                        role : getNewUser.role,
                         accessToken,
                         refreshToken
                     };

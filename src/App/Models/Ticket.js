@@ -1,11 +1,13 @@
 import { ObjectId } from "mongodb"
 
 class Ticket {
-    constructor(_id, Departure_Location, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status_Payment, Payment_Method, isCancle) {
+    constructor(_id, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status, Status_Payment, Payment_Method, isCancle) {
         this._id = _id
         this.Departure_Location = Departure_Location
         this.Destination = Destination
         this.Title_Tour = Title_Tour
+        this.Price_Tour = Price_Tour
+        this.After_Discount = After_Discount
         this.Departure_Date = Departure_Date
         this.Departure_Time = Departure_Time
         this.Total_DateTrip = Total_DateTrip
@@ -20,6 +22,7 @@ class Ticket {
         this.id_Custommer = id_Custommer
         this.id_Voucher = id_Voucher
         this.Created_at_Booking = Created_at_Booking
+        this.Status = Status
         this.Status_Payment = Status_Payment
         this.Payment_Method = Payment_Method
         this.isCancle = isCancle
@@ -31,6 +34,22 @@ class Ticket {
                 .find({})
                 .toArray()
             return result_GetTicket
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+    static async UpdateStatusTicket(db, Status, id_Ticket) {
+        try {
+            const result_Update = await db.collection('Tickets').updateOne(
+                { _id: id_Ticket },
+                {
+                    $set: {
+                        Status: Status
+                    }
+                }
+            )
+            return result_Update
         } catch (error) {
             console.log(error);
             throw error
