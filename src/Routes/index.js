@@ -12,6 +12,7 @@ import Review from "./Reviews.Route.js"
 import Custommer from './Custommer.Route.js'
 import Hotel from './Hotel.Route.js'
 import TourFavourite from './TourFavourite.Route.js'
+import Statistics from './Statistic.Route.js'
 const Route = (app) => {
     app.use('/V1/Review', Review)
     app.use('/V1/Tours', Tour)
@@ -27,6 +28,7 @@ const Route = (app) => {
     app.use('/User', User)
     app.use('/News', News)
     app.use('/Hotel',Hotel)
+    app.use('/Statistics',Statistics)
     app.use('/', Tour)
 }
 export default Route
