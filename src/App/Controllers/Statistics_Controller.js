@@ -12,6 +12,8 @@ class Admin_Statistics_Controller {
       const tickets = await Statistics.getTickets(db);
       const totalRevenue = await Statistics.getTotalRevenue(db);
       const totalAmount = await Statistics.getTotalAmountFromTickets(db);
+      const topRatedTours = await Statistics.getTopRatedTours(db);
+      const topToursByBookings = await Statistics.getTopToursByBookings(db);
 
       res.json({
         totalTours,
@@ -20,6 +22,9 @@ class Admin_Statistics_Controller {
         tickets,
         totalRevenue,
         totalAmount,
+        topRatedTours: topRatedTours.topRatedTours,
+        topRatedTourCount: topRatedTours.count,   
+        topToursByBookings,
       });
     } catch (error) {
       console.error(error);

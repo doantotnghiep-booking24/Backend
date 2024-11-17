@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 class Statistics {
   static async getTotalTours(db) {
     return db.collection('Tours').countDocuments();
@@ -62,6 +63,48 @@ class Statistics {
       .toArray();
     return result[0] ? result[0].totalAmount : 0;
   }
+  static async getTopRatedTours(db) {
+    const topRatedTours = await db.collection('Tours')
+      .find({ totalReview: { $gte: 4, $lte: 5 } })
+      .sort({ totalReview: -1 })
+      .toArray();
+
+    const count = topRatedTours.length;
+
+    return {
+      topRatedTours,
+      count,
+    };
+  }
+  static async getTopToursByBookings(db) {
+    return db.collection('Tickets')
+      .aggregate([
+        { $match: { isCancle: false } },
+        { $group: { _id: { $toObjectId: '$id_tour' }, bookingCount: { $sum: 1 } } }, 
+        { $sort: { bookingCount: -1 } },
+        { $limit: 3 },
+        {
+          $lookup: {
+            from: 'Tours',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'tourDetails'
+          }
+        },
+        { $unwind: '$tourDetails' },
+        {
+          $project: {
+            _id: 0,
+            tourId: '$_id',
+            Name_Tour: '$tourDetails.Name_Tour',
+            Image_Tour: '$tourDetails.Image_Tour',
+            bookingCount: 1
+          }
+        }
+      ])
+      .toArray();
+  }
+  
 }
 
 export default Statistics;
