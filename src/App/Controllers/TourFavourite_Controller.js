@@ -34,7 +34,6 @@ class TourFavourite_Controller {
                 const resFilter = response.filter(res_Fav => {
                     return res_Fav.id_User.includes(id_User) && res_Fav.id_Tour.includes(id_Tour)
                 })
-console.log('resFilter',resFilter);
 
                 if (resFilter) {
                     const CancleTourFavourite = TourFavourite.Delete(db, new ObjectId(resFilter[0]._id))

@@ -18,9 +18,12 @@ const sendVerificationEmail = async (email, id_Ticket, Departure_Location, Desti
         text: `Mã số vé của bạn là : ${id_Ticket}`,
         html: `
       <div style="font-family: Arial, sans-serif; text-align: center;">
-        <h1>Welcome, ${email}!</h1>
+      <div style="text-align: center;" >
+      <h1>Welcome, ${email}!</h1>
         <h4>Xác nhận vé thành công!!</h4>
         <h4>Mã số vé của bạn là : ${id_Ticket}</h4>
+      </div>
+        <div>
         <p>Điểm khởi hành : ${Departure_Location}</p>
         <p>Điểm đến : ${Destination}</p> 
         <p>Ngàykhởi hành : ${Departure_Date}</p>
@@ -32,6 +35,7 @@ const sendVerificationEmail = async (email, id_Ticket, Departure_Location, Desti
         <p>Trẻ em : ${Children}</p>
         <p>Tổng giá : ${Total_price}</p><br>
         <p>Nếu bạn Thắc mắc nào vui lòng liên hệ với email : doantotnghiep24booking@gmail.com </p>
+        </div>
         <footer style="margin-top: 20px; color: #777;">
           <p>Booking Travel</p>
           <p>Your Website Team</p>
