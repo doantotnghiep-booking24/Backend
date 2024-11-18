@@ -31,5 +31,8 @@
     "sever": "file:",
     "socket.io": "^4.8.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
 }

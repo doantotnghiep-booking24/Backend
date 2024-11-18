@@ -13,12 +13,12 @@ class ServiceTour_Controller {
       })
    }
    CreateService(req, res, next) {
-      const { Name_Service } = req.body
+      const { Name_Service, Price_Service } = req.body
       Connection.connect().then(async (db) => {
          try {
-            const CheckService = await Service.FindService(db, Name_Service)
+            const CheckService = await Service.FindService(db, Name_Service, Price_Service)
             if (!CheckService) {
-               const Create = new Service(undefined, Name_Service)
+               const Create = new Service(undefined, Name_Service, Price_Service)
                const result = await Create.CreateServices(db)
                if (result) return res.status(200).json({ message: 'Created Success' })
             } else {
@@ -32,9 +32,10 @@ class ServiceTour_Controller {
    UpdateService(req, res, next) {
       const { id } = req.params
       const { Name_Service } = req.body
+      const { Price_Service } = req.body
       Connection.connect().then(async (db) => {
          try {
-            const Update = new Service(undefined, Name_Service)
+            const Update = new Service(undefined, Name_Service, Price_Service)
             const result = await Update.UpdateService(db, new ObjectId(id))
             if (result) return res.status(200).json({ message: 'Updated Success' })
          } catch (error) {
