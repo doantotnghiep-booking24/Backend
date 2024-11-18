@@ -54,7 +54,7 @@ class Ticket_Controller {
                 }
 
             } catch (error) {
-                console.log(error);
+                console.log(error)
             }
         })
     }
