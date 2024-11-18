@@ -1,11 +1,12 @@
 class Service {
-    constructor(_id, Name_Service, Price_Service) {
+    constructor(_id, Name_Service, Price_Service, isDeleted = false) {
         this._id = _id
         this.Name_Service = Name_Service
         this.Price_Service = Price_Service
+        this.isDeleted = isDeleted
     }
-    
-   static async GetServices(db) {
+
+    static async GetServices(db) {
         try {
             const result_GetServices = await db.collection('Services')
                 .find({})
@@ -45,7 +46,8 @@ class Service {
                             Price_Service: this.Price_Service
                         }
                     }
-                )
+            )
+            
             return result_Update
         } catch (error) {
             console.log(error);
@@ -57,6 +59,27 @@ class Service {
             const result_Delete = await db.collection('Services')
                 .deleteOne({ _id: id })
             return result_Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+
+    static async RemoveService(db, id) {
+        try {
+            let reuslt_Delete;
+            const findIsDeleted = await db.collection('Services').findOne({ _id: id });
+            if (findIsDeleted.isDeleted === true) {
+                reuslt_Delete = await db.collection('Services').updateOne({ _id: id }, {
+                    $set: { isDeleted: false }
+                })
+            } else {
+                reuslt_Delete = await db.collection('Services').updateOne({ _id: id }, {
+                    $set: { isDeleted: true }
+                })
+            }
+
+            return reuslt_Delete
         } catch (error) {
             console.log(error);
             throw error

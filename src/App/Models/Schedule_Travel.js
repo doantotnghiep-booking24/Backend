@@ -1,11 +1,12 @@
 class Schedule_Travel {
-    constructor(_id, Name_Schedule, Location_map, Shedule_Morning, Shedule_Noon, Shedule_Afternoon) {
+    constructor(_id, Name_Schedule, Location_map, Shedule_Morning, Shedule_Noon, Shedule_Afternoon, isDeleted = false) {
         this._id = _id
         this.Name_Schedule = Name_Schedule
         this.Location_map = Location_map
         this.Shedule_Morning = Shedule_Morning
         this.Shedule_Noon = Shedule_Noon
         this.Shedule_Afternoon = Shedule_Afternoon
+        this.isDeleted = isDeleted
     }
     static async GetSchedule_Travel(db) {
         try {
@@ -66,6 +67,29 @@ class Schedule_Travel {
         try {
             const result_Delete = await db.collection('Schedule_Travels')
                 .deleteOne({ _id: id })
+            return result_Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+
+    static async RemoveSchedule_Travel(db, id) {
+        try {
+            let result_Delete;
+            const findIsDeleted = await db.collection('Schedule_Travels').findOne({ _id: id });
+            if (findIsDeleted.isDeleted === false) {
+                result_Delete = await db.collection('Schedule_Travels')
+                    .updateOne({ _id: id }, {
+                        $set: { isDeleted: true }
+                    })
+            } else {
+                result_Delete = await db.collection('Schedule_Travels')
+                    .updateOne({ _id: id }, {
+                        $set: { isDeleted: false }
+                    })
+            }
+
             return result_Delete
         } catch (error) {
             console.log(error);

@@ -28,7 +28,7 @@ class Voucher_Controller {
         Connection.connect().then(async (db) => {
             const CheckIsVoucher = await Voucher.FindVoucher(db, Code_Voucher)
             if (!CheckIsVoucher) {
-                const CreateVoucher = new Voucher(undefined, Code_Voucher, Description, parseInt(Discount), Type, Start_Date, End_Date, Max_Usage, Condition, isexpired)
+                const CreateVoucher = new Voucher(undefined, Code_Voucher, Description, parseInt(Discount), Type, Start_Date, End_Date, Max_Usage, Condition, isexpired, false)
                 const result = await CreateVoucher.Create(db)
                 if (result) return res.status(200).json({ message: 'Create Success' })
             } else {
@@ -41,7 +41,7 @@ class Voucher_Controller {
         const { Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const UpdateVoucher = new Voucher(undefined, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition)
+                const UpdateVoucher = new Voucher(undefined, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition, isDeleted)
                 const result = await UpdateVoucher.Update(db, new ObjectId(id))
                 if (result) return res.status(200).json({ message: 'Update Success' })
             } catch (error) {
@@ -55,6 +55,18 @@ class Voucher_Controller {
             try {
                 const DeleteVoucher = Voucher.Delete(db, new ObjectId(id))
                 if (DeleteVoucher) return res.status(200).json({ message: 'Delete Success' })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    RemoveVoucher(req, res) {
+        const { id } = req.params
+        Connection.connect().then(async (db) => {
+            try {
+                const RemoveVoucher = Voucher.Remove(db, new ObjectId(id))
+                if (RemoveVoucher) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }

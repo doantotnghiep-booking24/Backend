@@ -4,10 +4,10 @@ import Connection from '../../../Config/db/index.js';
 const AuthUser = (permissions) => {
     return async (req, res, next) => {
         try {
+            const originPort = req.headers.origin.split(':').pop();
+            const cookieName = originPort === '5173' ? 'auth' : 'authAdmin';
+            const user = req.cookies[cookieName];
 
-            const user = req.cookies.auth;
-            console.log(user);
-            
             if (!user) {
                 return res.status(401).json({ message: "You need to sign in" });
             }

@@ -24,7 +24,7 @@ class Featured_Location {
                 Data_rm.push(filesData[i].filename)
             }
             Image_Location = Data_Image
-            const CreateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour)
+            const CreateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour, false)
             const result = await CreateFeatured.Create(db)
             if (!result) {
                 if (filesData) {
@@ -58,7 +58,7 @@ class Featured_Location {
                     count++
                 }
                 Image_Location = Data_Image
-                const UpdateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour)
+                const UpdateFeatured = new Featured_Locations(undefined, Name_Location, Address_Location, Description, Image_Location, Type_Location, Nationnal, City_Location, id_tour, false)
                 const result = await UpdateFeatured.Update(db, new ObjectId(id))
                 if (!result) {
                     if (filesData) {
@@ -91,6 +91,18 @@ class Featured_Location {
             try {
                 const DeleteFeatured = Featured_Locations.Delete(db, new ObjectId(id))
                 if (DeleteFeatured) return res.status(200).json({ message: 'Delete Success' })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    RemoveFeatured_Location(req, res) {
+        const { id } = req.params
+        Connection.connect().then(async (db) => {
+            try {
+                const RemoveFeatured = Featured_Locations.Remove(db, new ObjectId(id))
+                if (RemoveFeatured) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }

@@ -42,7 +42,6 @@ class Tour_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const AllTour = await Tour.ShowAll(db, parseInt(page), parseInt(limit))
-                // console.log(AllTour);
 
                 if (AllTour) {
                     return res.status(200).json({ Tours: AllTour })
@@ -77,8 +76,7 @@ class Tour_Controller {
                     return res.status(200).json({ message: "Delete Success" })
                 }
             } catch (error) {
-                console.log(error);
-                
+                console.log(error); 
             }
         })
     }

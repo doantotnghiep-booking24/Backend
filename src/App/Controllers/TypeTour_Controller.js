@@ -17,7 +17,7 @@ class TypeTour_Controller {
         Connection.connect().then(async (db) => {
             const CheckTypeTour = await TypeTour.FindTypeTour(db, Name_Type)
             if (!CheckTypeTour) {
-                const CreateTypeTour = new TypeTour(undefined, Name_Type)
+                const CreateTypeTour = new TypeTour(undefined, Name_Type,false)
                 const result = await CreateTypeTour.Create(db)
                 if (result) return res.status(200).json({ message: 'Create Success' })
             } else {
@@ -30,7 +30,7 @@ class TypeTour_Controller {
         const { Name_Type } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const UpdateTypeTour = new TypeTour(undefined, Name_Type)
+                const UpdateTypeTour = new TypeTour(undefined, Name_Type, false)
                 const result = await UpdateTypeTour.Update(db, new ObjectId(id))
                 if (result) return res.status(200).json({ message: 'Update Success' })
             } catch (error) {
@@ -44,6 +44,18 @@ class TypeTour_Controller {
             try {
                 const DeleteTypeTour = TypeTour.Delete(db, new ObjectId(id))
                 if (DeleteTypeTour) return res.status(200).json({ message: 'Delete Success' })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    RemoveTypeTour(req, res) {
+        const { id } = req.params
+        Connection.connect().then(async (db) => {
+            try {
+                const RemoveTypeTour = TypeTour.Remove(db, new ObjectId(id))
+                if (RemoveTypeTour) return res.status(200).json({ message: 'Delete Success' })
             } catch (error) {
                 console.log(error);
             }

@@ -1,7 +1,8 @@
 class TypeTour {
-    constructor(_id, Name_Type) {
+    constructor(_id, Name_Type, isDeleted = false) {
         this._id = _id
         this.Name_Type = Name_Type
+        this.isDeleted = isDeleted
     }
     static async getAll(db) {
         try {
@@ -14,9 +15,9 @@ class TypeTour {
             throw (error)
         }
     }
-    static async FindTypeTour (db,Name_Type) {
+    static async FindTypeTour(db, Name_Type) {
         try {
-            const resultCheck = await db.collection('TypeTour').findOne({Name_Type : Name_Type})
+            const resultCheck = await db.collection('TypeTour').findOne({ Name_Type: Name_Type })
             return resultCheck ? true : false
         } catch (error) {
             console.log(error);
@@ -40,7 +41,7 @@ class TypeTour {
                         Name_Type: this.Name_Type
                     }
                 })
-                return Update
+            return Update
         } catch (error) {
 
         }
@@ -48,6 +49,26 @@ class TypeTour {
     static async Delete(db, id) {
         try {
             const Delete = await db.collection('TypeTour').deleteOne({ _id: id })
+            return Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+    static async Remove(db, id) {
+        try {
+            const findIsDeleted = await db.collection('TypeTour').findOne({ _id: id });
+            let Delete;
+            if (findIsDeleted.isDeleted === false) {
+                Delete = await db.collection('TypeTour').updateOne({ _id: id }, {
+                    $set: { isDeleted: true }
+                })
+            } else {
+                Delete = await db.collection('TypeTour').updateOne({ _id: id }, {
+                    $set: { isDeleted: false }
+                })
+            }
+
             return Delete
         } catch (error) {
             console.log(error);

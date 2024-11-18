@@ -6,6 +6,8 @@ Router.get('/GetAllService', AuthUser(["Admin", "User"]), Service_Controller.Get
 Router.post('/CreateService', AuthUser(["Admin"]), Service_Controller.CreateService)
 Router.post('/UpdateService/:id', AuthUser(["Admin"]), Service_Controller.UpdateService)
 Router.post('/DeleteService/:id', AuthUser(["Admin"]), Service_Controller.DeleteService)
+Router.post('/RemoveService/:id', AuthUser(["Admin"]), Service_Controller.RemoveService)
+Router.post('/RestoreService/:id', AuthUser(["Admin"]), Service_Controller.RemoveService)
 Router.get('/', Service_Controller.GetAllService)
 
 
