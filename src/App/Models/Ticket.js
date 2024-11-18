@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb"
 
 class Ticket {
-    constructor(_id, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, Created_at_Booking, Status, Status_Payment, Payment_Method, isCancle) {
+    constructor(_id, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status, Status_Payment, Payment_Method, isCancle) {
         this._id = _id
         this.Departure_Location = Departure_Location
         this.Destination = Destination
@@ -21,6 +21,10 @@ class Ticket {
         this.id_Service = id_Service
         this.id_Custommer = id_Custommer
         this.id_Voucher = id_Voucher
+        this.id_Hotel = id_Hotel,
+            this.Name_Hotel = Name_Hotel,
+            this.Price_Hotel = Price_Hotel
+        this.Number_Of_Hotel = Number_Of_Hotel
         this.Created_at_Booking = Created_at_Booking
         this.Status = Status
         this.Status_Payment = Status_Payment
