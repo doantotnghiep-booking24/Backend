@@ -37,7 +37,7 @@ class News_Controller {
                     Data_rm.push(filesData[i].filename)
                 }
                 Image = Data_Image
-                const CreateNew = new News(undefined, Name, Title, Content, Image, Cretate_At)
+                const CreateNew = new News(undefined, Name, Title, Content, Image, Cretate_At, false)
                 const result = await CreateNew.Create(db)
                 if (!result && Name === "" && Title === "" && Content === "" && Image === "") {
                     if (filesData) {
@@ -76,7 +76,7 @@ class News_Controller {
                     count++
                 }
                 Image = Data_Image
-                const UpdateNew = new News(undefined, Name, Title, Content, Image, Cretate_At)
+                const UpdateNew = new News(undefined, Name, Title, Content, Image, Cretate_At, false)
                 const result = await UpdateNew.Update(db, new ObjectId(id))
                 if (!result) {
                     if (filesData) {
@@ -87,7 +87,7 @@ class News_Controller {
                     }
                 } else {
                     filterNews.map(data_new => {
-                        
+
                         filenameUpd = data_new.Image
                     })
                     for (let i = 0; i < filenameUpd.length; i++) {
@@ -110,6 +110,31 @@ class News_Controller {
             try {
                 const filterNews = await db.collection('News').find({ _id: new ObjectId(id) },).toArray()
                 const DeleteNews = News.Delete(db, new ObjectId(id))
+                if (DeleteNews) {
+                    filterNews.map(News => {
+                        filenamedlt = News.Image
+                    })
+                    for (let i = 0; i < filenamedlt?.length; i++) {
+                        cloudinary.api.delete_resources(filenamedlt[i]?.filename, (error, result) => {
+                            console.log('error', error);
+                            console.log('result', result);
+                        })
+                    }
+                    return res.status(200).json({ message: 'Delete Success' })
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    RemoveNew(req, res) {
+        const { id } = req.params
+        let filenamedlt
+        Connection.connect().then(async (db) => {
+            try {
+                const filterNews = await db.collection('News').find({ _id: new ObjectId(id) }).toArray()
+                const DeleteNews = News.Remove(db, new ObjectId(id))
                 if (DeleteNews) {
                     filterNews.map(News => {
                         filenamedlt = News.Image

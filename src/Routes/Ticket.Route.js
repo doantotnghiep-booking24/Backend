@@ -1,5 +1,6 @@
 import express from 'express'
 import Ticket_Controller from '../App/Controllers/Ticket_Controller.js'
+import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
 const Router = express.Router()
 Router.get('/GetAllTicket',Ticket_Controller.GetAllTicket)
 Router.post('/Update_StatusTickets',Ticket_Controller.Update_StatusTickets)
@@ -17,12 +18,12 @@ Router.get('/vnpay_return',Ticket_Controller.vnpay_return)
 Router.post('/refund',Ticket_Controller.Vnpay_refund)
 Router.post('/Vnpay_Query',Ticket_Controller.Vnpay_Query)
 // PAYMENT DIRECT
-Router.post('/Direct_PaymentTicket',Ticket_Controller.Direct_PaymentTicket)
+Router.post('/Direct_PaymentTicket', AuthUser(["Admin", "User"]), Ticket_Controller.Direct_PaymentTicket)
 
 // Router.get('/vnpay_ipn',Ticket_Controller.vnpay_ipn)
 // Router.post('/UpdateService/:id',Service_Controller.UpdateService)
 // Router.post('/DeleteService/:id',Service_Controller.DeleteService)
-Router.get('/',Ticket_Controller.GetAllTicket)
+Router.get('/', Ticket_Controller.GetAllTicket)
 
 
 export default Router

@@ -3,13 +3,10 @@ import { Server } from 'socket.io';
 import { ObjectId } from 'mongodb';
 import Connection from "./Config/db/index.js"
 import Comments from './App/Models/Comments.js';
+import { corsOptions } from './Config/cors.js';
 const setupSocket = (httpServer) => {
     const io = new Server(httpServer, {
-        cors: {
-            origin: "http://localhost:5173",
-            methods: ["GET", "POST"],
-            credentials: true
-        }
+        cors: corsOptions
     });
 
     io.on('connection', (socket) => {

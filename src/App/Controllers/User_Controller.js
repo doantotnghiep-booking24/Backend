@@ -17,13 +17,13 @@ class User_Controller {
         if (Name === "" || !isCheckEmail || Password === "") {
             return res
                 .status(400)
-                .send({ errorMessage: 'Please enter complete information' });
+                .send({ error: 'Vui lòng nhập đầy đủ thông tin để đăng ký!' });
         }
         Connection.connect().then(async (db) => {
             try {
                 const result_user = await User.Check_UserisExist(db, Email)
                 if (result_user) {
-                    return res.status(400).send({ error: 'Email is already taken' })
+                    return res.status(400).send({ error: 'Email đã tồn tại, Vui lòng nhập Email khác để đăng ký!' })
                 } else {
                     bcrypt.hash(Password, 10, (err, hash) => {
                         if (err) {
@@ -54,17 +54,22 @@ class User_Controller {
         const reg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
         const isCheckEmail = reg.test(Email)
         if (Email === "" || Password === "" || !isCheckEmail) {
-            return res.status(400).send({ message: 'Please enter complete infomation' })
+            return res.status(404).send({ message: 'Please enter complete infomation' })
         }
+        console.log(Email, Password);
+
         Connection.connect().then(async (db) => {
             try {
                 const find_user = await User.Find_user(db, Email)
+
+
                 if (!find_user) {
                     return res.status('404').send({ message: 'Email not found' })
                 }
                 bcrypt.compare(Password, find_user.Password, (err, result) => {
                     if (err) {
                         console.log(err);
+                        return res.status(500).send({ message: 'Internal server error' });
                     } else {
                         if (result) {
                             const AccessToken = Auth.createAccessToken(find_user.Name, find_user.Email, find_user.role)
@@ -78,6 +83,8 @@ class User_Controller {
                                 RefeshToken
                             }
                             res.status(200).send({ inforUser })
+                        } else {
+                            return res.status(401).send({ message: 'Mật khẩu không chính xác vui lòng nhập mật khẩu hợp lệ' });
                         }
                     }
                 })
@@ -89,7 +96,11 @@ class User_Controller {
     RefeshToken(req, res, next) {
         Connection.connect().then(async (db) => {
             try {
-                const RefreshTokens = req.body.token?.split(" ")[1];
+
+
+                const RefreshTokens = req.body.token
+                console.log("-------------------------",RefreshTokens);
+
                 if (RefreshTokens) {
                     jwt.verify(RefreshTokens, process.env.SECRET_KEY_REFESH_TOKEN, (err, user) => {
                         if (err) {
@@ -215,7 +226,7 @@ class User_Controller {
                         Name: findUser.Name,
                         Email: findUser.Email,
                         photoUrl: findUser.photoUrl,
-                        role : findUser.role,
+                        role: findUser.role,
                         AccessToken,
                         RefreshToken
                     };
@@ -238,7 +249,7 @@ class User_Controller {
                         Name: getNewUser.Name,
                         Email: getNewUser.Email,
                         photoUrl: getNewUser.photoUrl,
-                        role : getNewUser.role,
+                        role: getNewUser.role,
                         accessToken,
                         refreshToken
                     };
@@ -278,7 +289,7 @@ class User_Controller {
                         Name: findUser.Name,
                         Email: findUser.Email,
                         photoUrl: findUser.photoUrl,
-                        role : findUser.role,
+                        role: findUser.role,
                         AccessToken,
                         RefreshToken
                     };
@@ -301,7 +312,7 @@ class User_Controller {
                         Name: getNewUser.Name,
                         Email: getNewUser.Email,
                         photoUrl: getNewUser.photoUrl,
-                        role : getNewUser.role,
+                        role: getNewUser.role,
                         accessToken,
                         refreshToken
                     };
@@ -317,8 +328,37 @@ class User_Controller {
         });
     }
 
+    EditInfoUser(req, res) {
 
+        const data = req.body;
+        const { id } = req.params;
+        let filePath = "";
+        if (req?.files?.photoUrl && req.files.photoUrl.length > 0) {
+            filePath = req.files.photoUrl[0].path;
+            data.photoUrl = filePath;
+        }
+        Connection.connect().then(async (db) => {
+            try {
+                const findUser = await User.FindOneByUpdate(db, new ObjectId(id), data);
 
-
+                if (!findUser) {
+                    return res.status(404).send({ message: 'User not found' });
+                }
+                console.log(findUser);
+                return res.status(200).json({ message: "updated successfully", data: findUser })
+            } catch (error) {
+                console.log('Error:', error);
+                return res.status(500).send({ message: 'Internal server error' });
+            }
+        }).catch(error => {
+            console.log('Database connection error:', error);
+            return res.status(500).send({ message: 'Database connection error' });
+        });
+    }
 }
+
+
+
+
+
 export default new User_Controller()
