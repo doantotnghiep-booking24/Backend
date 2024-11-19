@@ -25,7 +25,7 @@ class Schedule_Travel {
     }
     CreateSchedule_Travel(req, res, next) {
         const { Name_Schedule, Time_Morning_Schedule, Text_Schedule_Morning, Time_Noon_Schedule, Text_Schedule_Noon, Time_Afternoon_Schedule, Text_Schedule_Afternoon, Location_map } = req.body
-        console.log(Time_Morning_Schedule);
+        console.log(Time_Morning_Schedule)
         const Shedule_Morning = [{
             Time_Morning_Schedule: Time_Morning_Schedule,
             Text_Schedule_Morning: Text_Schedule_Morning

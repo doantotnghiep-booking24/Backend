@@ -98,6 +98,7 @@ Connection.connect().then(async (db) => {
     for (let i = 0; i < getTour.length; i++) {
         for (let j = 0; j < result.length; j++) {
             if (getTour[i].Price_Tour === result[j].Condition.Min_tour_value) {
+                
                 db.collection('Tours').updateOne(
                     { _id: { $in: [new ObjectId(getTour[i]._id)] } },
                     {
