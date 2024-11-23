@@ -14,6 +14,8 @@ class Admin_Statistics_Controller {
       const totalAmount = await Statistics.getTotalAmountFromTickets(db);
       const topRatedTours = await Statistics.getTopRatedTours(db);
       const topToursByBookings = await Statistics.getTopToursByBookings(db);
+      // Lấy danh sách người dùng đã đặt tour
+      const usersBookedTour = await Statistics.getUsersBookedTour(db);
 
       res.json({
         totalTours,
@@ -25,6 +27,7 @@ class Admin_Statistics_Controller {
         topRatedTours: topRatedTours.topRatedTours,
         topRatedTourCount: topRatedTours.count,   
         topToursByBookings,
+        usersBookedTour, 
       });
     } catch (error) {
       console.error(error);

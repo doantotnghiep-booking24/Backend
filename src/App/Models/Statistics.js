@@ -5,7 +5,7 @@ class Statistics {
   }
 
   static async getTotalTickets(db) {
-    return db.collection('Tickets').countDocuments({ isCancle: false });
+    return db.collection('Tickets').countDocuments({ isRequestCancel: false });
   }
 
   static async getTotalNews(db) {
@@ -15,7 +15,7 @@ class Statistics {
   static async getTickets(db) {
     return db.collection('Tickets')
       .aggregate([
-        { $match: { isCancle: false } },
+        { $match: { isRequestCancel: false } },
         {
           $project: {
             _id: 1,
@@ -31,7 +31,7 @@ class Statistics {
   static async getTotalRevenue(db) {
     return db.collection('Tickets')
       .aggregate([
-        { $match: { isCancle: false } },
+        { $match: { isRequestCancel: false } },
         {
           $project: {
             Created_at_Booking: { $toDate: '$Created_at_Booking' },
@@ -42,6 +42,7 @@ class Statistics {
           $group: {
             _id: { $dateToString: { format: '%Y-%m-%d', date: '$Created_at_Booking' } },
             totalRevenuePerDay: { $sum: '$Total_price' },
+            totalTicketsPerDay: { $sum: 1 }, // tổng số vé đã đặt trong ngày 
           },
         },
         { $sort: { '_id': 1 } },
@@ -52,7 +53,7 @@ class Statistics {
   static async getTotalAmountFromTickets(db) {
     const result = await db.collection('Tickets')
       .aggregate([
-        { $match: { isCancle: false } },
+        { $match: { isRequestCancel: false } },
         {
           $group: {
             _id: null,
@@ -79,7 +80,7 @@ class Statistics {
   static async getTopToursByBookings(db) {
     return db.collection('Tickets')
       .aggregate([
-        { $match: { isCancle: false } },
+        { $match: { isRequestCancel: false } },
         { $group: { _id: { $toObjectId: '$id_tour' }, bookingCount: { $sum: 1 } } }, 
         { $sort: { bookingCount: -1 } },
         { $limit: 3 },
@@ -99,6 +100,40 @@ class Statistics {
             Name_Tour: '$tourDetails.Name_Tour',
             Image_Tour: '$tourDetails.Image_Tour',
             bookingCount: 1
+          }
+        }
+      ])
+      .toArray();
+  }
+
+  // lấy danh sách người dùng đã đặt tour
+  static async getUsersBookedTour(db) {
+    return db.collection('Tickets')
+      .aggregate([
+        { $match: { isRequestCancel: false } }, 
+        { 
+          $group: {
+            _id: { $toObjectId: '$id_user' }, 
+            totalBookings: { $sum: 1 }, 
+          }
+        },
+        {
+          $lookup: {
+            from: 'Users', 
+            localField: '_id',
+            foreignField: '_id',
+            as: 'userDetails'
+          }
+        },
+        { $unwind: '$userDetails' }, 
+        {
+          $project: {
+            _id: 0,
+            userId: '$_id',
+            totalBookings: 1,
+            username: '$userDetails.Name',
+            email: '$userDetails.Email', 
+            photoUrl: '$userDetails.photoUrl',
           }
         }
       ])
