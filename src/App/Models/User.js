@@ -118,5 +118,13 @@ class User {
             throw new Error(error);
         }
     }
+    static async GetAllUsers(db) {
+        try {
+            const result = await db.collection('Users').find({}).toArray()
+            return result
+        } catch (error) {
+            
+        }
+    }
 }
 export default User

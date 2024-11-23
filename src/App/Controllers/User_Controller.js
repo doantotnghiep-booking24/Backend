@@ -78,7 +78,8 @@ class User_Controller {
                                 _id: find_user._id,
                                 Name: find_user.Name,
                                 Email: find_user.Email,
-                                role : find_user.role,
+                                photoUrl: find_user.photoUrl,
+                                role: find_user.role,
                                 AccessToken,
                                 RefeshToken
                             }
@@ -99,7 +100,7 @@ class User_Controller {
 
 
                 const RefreshTokens = req.body.token
-                console.log("-------------------------",RefreshTokens);
+                console.log("-------------------------", RefreshTokens);
 
                 if (RefreshTokens) {
                     jwt.verify(RefreshTokens, process.env.SECRET_KEY_REFESH_TOKEN, (err, user) => {
@@ -354,6 +355,18 @@ class User_Controller {
             console.log('Database connection error:', error);
             return res.status(500).send({ message: 'Database connection error' });
         });
+    }
+
+    GetAllUsers(req, res, next) {
+        Connection.connect().then(async (db) => {
+            try {
+                const resultGetUsers = await User.GetAllUsers(db)
+                if(resultGetUsers) return res.status(200).send({Users : resultGetUsers })
+            } catch (error) {
+                console.log(error);
+
+            }
+        })
     }
 }
 

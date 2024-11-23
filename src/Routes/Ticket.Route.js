@@ -4,6 +4,8 @@ import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
 const Router = express.Router()
 Router.get('/GetAllTicket',Ticket_Controller.GetAllTicket)
 Router.post('/Update_StatusTickets',Ticket_Controller.Update_StatusTickets)
+Router.post('/Update_StatusCancelTicketsByClient/:id',Ticket_Controller.Update_StatusCancelTicketsByClient)
+Router.post('/ConfirmCancleTicket/:id',Ticket_Controller.HandleConfirmCancleTicket)
 
 // ZALOPAY
 Router.post('/PaymentZalopay',Ticket_Controller.PaymentWithZalopay)
