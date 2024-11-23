@@ -12,13 +12,15 @@ import { corsOptions } from './Config/cors.js';
 const app = express()
 // console.log('123');
 
+// app.use(cors({
+//     origin: "*",
+//     credentials: true,
+//     exposedHeaders: ['Authorization']
+// }))
 app.use(cors(corsOptions))
-
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // use cookie-parser to read cookies
-
-
 
 app.engine('handlebars', engine({}));
 app.set('view engine', 'handlebars');
@@ -41,14 +43,15 @@ Connection.connect().then(async (db) => {
                         isexpired: false,
                     }
                 })
-                console.log(voucher.Code_Voucher, 'đã hết hiệu lực');
+                // console.log(voucher.Code_Voucher, 'đã hết hiệu lực');
+
             } else {
                 db.collection('Voucher').updateOne({ _id: new ObjectId(voucher._id) }, {
                     $set: {
                         isexpired: true,
                     }
                 })
-                console.log(voucher.Code_Voucher, 'Voucher vẫn còn hiệu lực ')
+                console.log(voucher.Code_Voucher, 'Voucher vẫn còn hiệu lực ');
             }
         })
     } catch (error) {
@@ -98,7 +101,7 @@ Connection.connect().then(async (db) => {
             if (getTour[i].Price_Tour === result[j].Condition.Min_tour_value) {
                 
                 db.collection('Tours').updateOne(
-                    { _id: { $in: [new ObjectId(getTour._id)] } },
+                    { _id: { $in: [new ObjectId(getTour[i]._id)] } },
                     {
                         $set: {
                             After_Discount: 0
