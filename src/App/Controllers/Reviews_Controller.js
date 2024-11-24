@@ -6,6 +6,7 @@ import Tour from '../Models/Tour.js';
 import { ObjectId } from 'mongodb';
 import { v2 as cloudinary } from 'cloudinary';
 import { io } from '../../index.js';
+import censorReviewRegex from '../../utils/censorReviewRegex.js';
 class ReviewsController {
     async GetAllReviews(req, res, next) {
         const { id } = req.params;
@@ -17,6 +18,7 @@ class ReviewsController {
             const detailTour = await Tour.Detail(db, new ObjectId(id));
 
             const tourIds = detailTour.map(tour => tour._id);
+
 
             // Lọc các đánh giá dựa trên tourId
             const totalReview = AllReviews.filter(review =>
@@ -41,7 +43,6 @@ class ReviewsController {
             const combinedResults = await Promise.all(AllReviews.map(async (review) => {
                 const commentsForReview = AllComments.filter(comment => comment.idRating.toString() === review._id.toString());
                 const firstComment = commentsForReview.length > 0 ? commentsForReview[0] : {};
-
                 // Lấy thông tin user dựa trên userId của review
                 const user = await User.GetUserById(db, new ObjectId(review.userId));
 
@@ -55,7 +56,7 @@ class ReviewsController {
                     likes: firstComment.likes,
                     dislikes: firstComment.dislikes,
                     Image: commentsForReview.map(comment => comment.Image).flat(),
-                    content: commentsForReview.length > 0 ? commentsForReview[0].content : null,
+                    content: commentsForReview.length > 0 ? censorReviewRegex(commentsForReview[0].content) : null,
                     Create_At: review.Created_At,
                 };
             }));
