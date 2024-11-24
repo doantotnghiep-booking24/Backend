@@ -17,6 +17,7 @@ class Auth {
         };
 
         const AccessToken = jwt.sign(Payload, process.env.SECRET_KEY_ACCESS_TOKEN, options);
+console.log('AccessToken',AccessToken);
 
         return AccessToken;
     }
@@ -60,6 +61,7 @@ class Auth {
                 req.email = decoded.email; // Lưu thông tin email từ token vào req
                 req.name = decoded.name;
                 req.role = decoded.role;
+                
                 next(); // Tiếp tục tới middleware hoặc route tiếp theo
             }
         });

@@ -10,6 +10,7 @@ import qs from 'qs'
 import QueryString from 'qs'
 import dateFormat from 'dateformat'
 import { emailService } from '../Services/emailStatus_TicketService.js'
+import { emailServiceCancle } from '../Services/mailCancleTicket.js'
 import User from '../Models/User.js'
 import { json } from 'express'
 const config = {
@@ -36,23 +37,54 @@ class Ticket_Controller {
         const { Status, id_Ticket, id_Custommer } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const UpdateStatus = await Ticket.UpdateStatusTicket(db, Status, new ObjectId(id_Ticket))
-                if (UpdateStatus) {
-                    const Cus = await Custommers.FindCustommer(db, new ObjectId(id_Custommer))
-                    if (Cus) {
-                        const Mail_User = await User.Find_EmailUser(db, new ObjectId(Cus[0].Create_by))
-                        if (Mail_User) {
-                            const ticket = await Ticket.FindTicket(db, new ObjectId(id_Ticket))
-                            if (ticket.result_Find[0].Status === 'Đã Xác Nhận') {
-                                emailService.sendVerificationEmail(Mail_User[0].Email, id_Ticket, ticket.result_Find[0].Departure_Location, ticket.result_Find[0].Destination, ticket.result_Find[0].Departure_Date, ticket.result_Find[0].Departure_Time, ticket.result_Find[0].Total_DateTrip, ticket.result_Find[0].Adult_fare, ticket.result_Find[0].Children_fare, ticket.result_Find[0].Adult, ticket.result_Find[0].Children, ticket.result_Find[0].Total_price)
-                                console.log('-------------------------đã xác nhận'); 
+                if (Status === 'Đã Xác Nhận' && id_Ticket, id_Custommer) {
+                    const UpdateStatus = await Ticket.UpdateStatusTicket(db, Status, new ObjectId(id_Ticket))
+                    if (UpdateStatus) {
+                        const Cus = await Custommers.FindCustommer(db, new ObjectId(id_Custommer))
+                        if (Cus) {
+                            const Mail_User = await User.Find_EmailUser(db, new ObjectId(Cus[0].Create_by))
+                            if (Mail_User) {
+                                const ticket = await Ticket.FindTicket(db, new ObjectId(id_Ticket))
+                                if (ticket.result_Find[0].Status === 'Đã Xác Nhận') {
+                                    emailService.sendVerificationEmail(Mail_User[0].Email, id_Ticket, ticket.result_Find[0].Departure_Location, ticket.result_Find[0].Destination, ticket.result_Find[0].Departure_Date, ticket.result_Find[0].Departure_Time, ticket.result_Find[0].Total_DateTrip, ticket.result_Find[0].Adult_fare, ticket.result_Find[0].Children_fare, ticket.result_Find[0].Adult, ticket.result_Find[0].Children, ticket.result_Find[0].Total_price)
+                                    console.log('-------------------------đã xác nhận');
+                                }
                             }
-                           
                         }
+                        return res.status(200).send({ UpdateStatus: UpdateStatus })
                     }
-                    return res.status(200).send({ UpdateStatus: UpdateStatus })
                 }
-
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    }
+    Update_StatusCancelTicketsByClient(req, res, next) {
+        const { id } = req.params
+        Connection.connect().then(async (db) => {
+            try {
+                const resultRequest = await Ticket.UpdateStatusCancelTicket(db, new ObjectId(id))
+                return res.status(200).send({ resultRequest: resultRequest })
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    }
+    HandleConfirmCancleTicket(req, res, next) {
+        const { id } = req.params
+        const { idCus } = req.body
+        console.log(idCus);
+        Connection.connect().then(async (db) => {
+            try {
+                const Cus = await Custommers.FindCustommer(db, new ObjectId(idCus))
+                if (Cus) {
+                    const Mail_User = await User.Find_EmailUser(db, new ObjectId(Cus[0].Create_by))
+                    if (Mail_User) {
+                        const result_sendEmail = emailServiceCancle.sendCancleTicket(Mail_User[0].Email, id)
+                        const resultComfirm = await Ticket.ConfirmCancleTicket(db, new ObjectId(id))
+                        return res.status(200).send({ resultComfirm: resultComfirm })
+                    }
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -241,11 +273,11 @@ class Ticket_Controller {
         let { Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Status_Payment, Payment_Method } = req.body
         let Created_at_Booking = new Date()
         let Status
-        let isCancle
+        let isRequestCancel
         Price_Hotel = parseInt(Price_Hotel)
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status = 'Tiếp nhận', Status_Payment, Payment_Method = null, isCancle = false)
+                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status = 'Tiếp nhận', Status_Payment, Payment_Method = null, isRequestCancel = false)
                 const result = await Create.CreateTicket(db)
                 if (result) {
                     return res.status(200).send({ message: 'Created Success', ticKetId: result })

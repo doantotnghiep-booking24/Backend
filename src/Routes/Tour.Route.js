@@ -2,6 +2,7 @@ import express from 'express'
 import Tour_Controller from '../App/Controllers/Tour_Controller.js'
 import uploadCloud from '../App/MiddleWare/Cloundinary.js'
 import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
+import Auth from '../App/MiddleWare/Jwt/Auth.js'
 const Router = express.Router()
 
 Router.get('/GetTours', Tour_Controller.GetAllTour)  // Vd :  http://localhost:3001/V1/Tours/GetTours?page=1&limit=1
