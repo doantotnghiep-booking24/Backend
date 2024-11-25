@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb"
 
 class Ticket {
-    constructor(_id, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status, Status_Payment, Payment_Method, isCancle) {
+    constructor(_id, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status, Status_Payment, Payment_Method, isRequestCancel) {
         this._id = _id
         this.Departure_Location = Departure_Location
         this.Destination = Destination
@@ -29,13 +29,14 @@ class Ticket {
         this.Status = Status
         this.Status_Payment = Status_Payment
         this.Payment_Method = Payment_Method
-        this.isCancle = isCancle
+        this.isRequestCancel = isRequestCancel
     }
 
     static async GetTicket(db) {
         try {
             const result_GetTicket = await db.collection('Tickets')
                 .find({})
+                .sort({ Created_at_Booking: -1 })
                 .toArray()
             return result_GetTicket
         } catch (error) {
@@ -50,6 +51,31 @@ class Ticket {
                 {
                     $set: {
                         Status: Status
+                    }
+                }
+            )
+            return result_Update
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+    static async ConfirmCancleTicket(db, id) {
+        try {
+            const Delete = await db.collection('Tickets').deleteOne({ _id: id })
+            return Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
+    static async UpdateStatusCancelTicket(db, id_Ticket) {
+        try {
+            const result_Update = await db.collection('Tickets').updateOne(
+                { _id: id_Ticket },
+                {
+                    $set: {
+                        isRequestCancel: true
                     }
                 }
             )

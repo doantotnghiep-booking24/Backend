@@ -14,6 +14,7 @@ Router.post('/LoginWithGoogle', User_Controller.LoginWithGoogle)//http://localho
 Router.post('/LoginWithFacebook', User_Controller.LoginWithFacebook)//http://localhost:3001/User/LoginWithFacebook
 Router.put('/Edit-User/:id', uploadCloud.fields([{ name: 'photoUrl' }]), User_Controller.EditInfoUser)//http://localhost:3001/User/Edit-User
 Router.get('/GetUser/:id', User_Controller.GetUserById)
+Router.get('/GetAllUsers', User_Controller.GetAllUsers)
 Router.get('/', User_Controller.Register)
 
 export default Router

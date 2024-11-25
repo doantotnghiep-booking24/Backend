@@ -71,12 +71,17 @@ class Tour_Controller {
         const { id } = req.params
         Connection.connect().then(async (db) => {
             try {
-                const Delete_Tour = await Tour.Delete(db, new ObjectId(id))
-                if (Delete_Tour) {
-                    return res.status(200).json({ message: "Delete Success" })
+                const isCheckTicket = await Tour.IsTourBooked(db, id)
+                if (!isCheckTicket) {
+                    const Delete_Tour = await Tour.Delete(db, new ObjectId(id))
+                    if (Delete_Tour) {
+                        return res.status(200).json({ message: "Delete Success" })
+                    }
+                } else {
+                    return res.status(400).send({ message: "Trip that have been booked, cannot delete" })
                 }
             } catch (error) {
-                console.log(error); 
+                console.log(error);
             }
         })
     }
@@ -231,7 +236,6 @@ class Tour_Controller {
             }
         })
     }
-
 
 
 }

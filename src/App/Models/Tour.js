@@ -54,14 +54,23 @@ class Tour {
     static async GetTours_Related(db) {
         try {
             const limit = 6
-            const GetTours_Related = await db.collection('Tours').find({totalReview : {$gte : 4 , $lte : 5}})
+            const GetTours_Related = await db.collection('Tours').find({ totalReview: { $gte: 4, $lte: 5 } })
                 .limit(limit)
                 .sort({ Price_Tour: 1 })
                 .toArray()
             const response = GetTours_Related.map(item => new Tour(item._id, item.id_Schedule_Travel, item.id_Voucher, item.id_Category, item.id_Type_Tour, item.Name_Tour, item.Price_Tour, item.After_Discount, item.Image_Tour, item.Title_Tour, item.Description_Tour, item.Start_Tour, item.End_Tour, item.total_Date, item.totalReview))
             // console.log(response);
-            
+
             return response
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
+    static async IsTourBooked(db, id) {
+        try {
+            const result = await db.collection('Tickets').findOne({ id_tour: id });
+            return result ? true : false
         } catch (error) {
             console.log(error);
             throw (error)
@@ -158,8 +167,14 @@ class Tour {
         try {
             const resultSearch = await db.collection('Tours')
                 .find({
-                    isDeleted: false, 
-                    Name_Tour: { $regex: new RegExp(NameSearch, 'i') },
+                    $and: [
+                        { isDeleted: false },
+                        {
+                            $or: [
+                                { Name_Tour: { $regex: new RegExp(NameSearch, 'i') } },
+                            ]
+                        },
+                    ]
                 })
                 .skip((page - 1) * limit)
                 .limit(limit)
