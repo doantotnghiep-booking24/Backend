@@ -7,7 +7,7 @@ const AuthUser = (permissions) => {
             const originPort = req.headers.origin.split(':').pop();
             const cookieName = originPort === '5173' ? 'auth' : 'authAdmin';
             const user = req.cookies[cookieName];
-// console.log('req.cookies',req.cookies);
+console.log(user);
 
             if (!user) {
                 return res.status(401).json({ message: "You need to sign in" });
