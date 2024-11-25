@@ -10,6 +10,7 @@ Router.post('/UpdateNew/:id', AuthUser(["Admin"]),  uploadCloud.array('Image'), 
 Router.post('/DeleteNew/:id', AuthUser(["Admin"]),  News_Controller.DeleteNew) // http://localhost:3001/News/DeleteNew/id
 Router.post('/Remove/:id', AuthUser(["Admin"]),  News_Controller.RemoveNew) // http://localhost:3001/News/DeleteNew/id
 Router.post('/Restore/:id', AuthUser(["Admin"]),  News_Controller.RemoveNew) // http://localhost:3001/News/DeleteNew/id
+Router.get('/DetailNew/:id', News_Controller.DetailNew) // http://localhost:3001/News/DetailNews/id
 Router.get('/', News_Controller.GetAllNews)
 
 
