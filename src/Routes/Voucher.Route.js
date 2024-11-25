@@ -11,4 +11,4 @@ Router.post('/RestoreVoucher/:id', AuthUser(["Admin"]), Voucher_Controller.Remov
 Router.get('/', Voucher_Controller.GetAllVoucher)
 
 
-export default Router
+export default Router   

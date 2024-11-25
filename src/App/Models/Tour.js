@@ -163,12 +163,11 @@ class Tour {
         }
     }
 
-    static async Search(db, NameSearch, PriceSearch, page, limit) {
+    static async Search(db, NameSearch, page, limit) {
         try {
             const resultSearch = await db.collection('Tours')
                 .find({
                     $and: [
-                        { Price_Tour: { $gte: PriceSearch } },
                         { isDeleted: false },
                         {
                             $or: [
@@ -180,17 +179,22 @@ class Tour {
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .sort({ Price_Tour: 1 })
-                .toArray()
-            const totalItems = await resultSearch.length
+                .toArray();
+    
+            const totalItems = await db.collection('Tours').countDocuments({
+                isDeleted: false,
+                Name_Tour: { $regex: new RegExp(NameSearch, 'i') },
+            });
+    
             return {
                 totalItems: totalItems,
                 Page: page,
                 TotalPages: Math.ceil(totalItems / limit),
-                datas: [...resultSearch]
-            }
+                datas: [...resultSearch],
+            };
         } catch (error) {
             console.log(error);
-            throw (error)
+            throw error;
         }
     }
 

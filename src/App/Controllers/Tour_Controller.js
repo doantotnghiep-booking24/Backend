@@ -139,15 +139,20 @@ class Tour_Controller {
         })
     }
     SearchTour(req, res, next) {
-        const { NameSearch, page, limit, PriceSearch } = req.query
+        const { NameSearch, page, limit } = req.query;
         Connection.connect().then(async (db) => {
             try {
-                const resultSearch = await Tour.Search(db, NameSearch, parseInt(PriceSearch), parseInt(page), parseInt(limit))
-                if (resultSearch) return res.status(200).json({ search: resultSearch })
+                const resultSearch = await Tour.Search(db, NameSearch, parseInt(page), parseInt(limit));
+                if (resultSearch) {
+                    return res.status(200).json({ search: resultSearch });
+                } else {
+                    return res.status(404).json({ Message: "No tours found" });
+                }
             } catch (error) {
-                console.log(err)
+                console.log(error);
+                return res.status(500).json({ Message: "Error in searching tours" });
             }
-        })
+        });
     }
     DetailTour(req, res, next) {
         const { id } = req.params
