@@ -20,21 +20,12 @@ class Chat {
     }
   }
   // Lưu tin nhắn mới vào cơ sở dữ liệu
-  async createMessage(senderId, receiverId, message) {
+  static async createMessage(db, newMessages) {
     try {
-      const db = await Connection.connect();  // Ensure Connection is imported correctly
-      const newMessage = {
-        senderId,
-        receiverId,
-        message,
-        time: new Date(), // Lưu thời gian gửi tin nhắn
-      };
-
       // Lưu tin nhắn vào collection 'Chats'
-      const result = await db.collection('Chats').insertOne(newMessage);
-
+      const result = await db.collection('Chats').insertOne(newMessages);
       // Trả về tin nhắn vừa được lưu với insertedId
-      return { ...newMessage, _id: result.insertedId };  // Thêm _id vào đối tượng tin nhắn
+      return result;  // Thêm _id vào đối tượng tin nhắn
     } catch (error) {
       console.error('Error creating message:', error);
     }
@@ -68,33 +59,33 @@ class Chat {
     }
   }
 
-   async CheckIsChats(db, id_Room) {
+  async CheckIsChats(db, senderId, receiverId) {
     try {
-      const messages = await db.collection('Chats').findOne({_id : id_Room})
-      return {messages, isBoolean : messages ? true : false}
+      const messages = await db.collection('Chats').findOne({ $and: [{ senderId: senderId }, { receiverId: receiverId }] })
+      return messages
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   }
-  async findByidChat(db,id_User,id_Admin) {
+  async findByidChat(db, id_User, id_Admin) {
     try {
-      const messages = await db.collection('Chats').find({senderId : id_User,receiverId : id_Admin})
+      const messages = await db.collection('Chats').find({ senderId: id_User, receiverId: id_Admin })
         .toArray();
-      return messages 
+      return messages
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   }
-  
-  static async findByIdUser (db, id_User) {
+
+  static async findById(db, id) {
     try {
-      console.log('id_User',id_User);
-      
-      const messages = await db.collection('Chats').find({senderId: id_User}).toArray();
+      console.log('id', id);
+
+      const messages = await db.collection('Chats').find({ _id: id }).toArray();
       return messages
     } catch (error) {
       console.log('Lỗi', error);
-      
+
     }
   }
 };
