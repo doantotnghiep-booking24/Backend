@@ -20,7 +20,7 @@ export const getMessages = async (req, res) => {
   Connection.connect().then(async (db) => {
     const { userId } = req.params;
     // const loggedInUserId = req.userId; // ID của người dùng đã đăng nhập
-    console.log('userId', userId);
+    // console.log('userId', userId);
     try {
       const messages = await Chat.getMessagess(db, userId);
       res.status(200).json(messages);  // Trả về danh sách tin nhắn
