@@ -1,5 +1,6 @@
 import Chat from '../Models/Chat.js';
 import Connection from '../../Config/db/index.js';
+import { ObjectId } from 'mongodb';
 
 // Xử lý gửi tin nhắn
 export const sendMessage = async (req, res) => {
@@ -19,7 +20,7 @@ export const getMessages = async (req, res) => {
   Connection.connect().then(async (db) => {
     const { userId } = req.params;
     // const loggedInUserId = req.userId; // ID của người dùng đã đăng nhập
-    console.log('userId', userId);
+    // console.log('userId', userId);
     try {
       const messages = await Chat.getMessagess(db, userId);
       res.status(200).json(messages);  // Trả về danh sách tin nhắn
@@ -30,7 +31,6 @@ export const getMessages = async (req, res) => {
     }
   })
 };
-
 export const GetAllChat = (req, res, next) => {
   Connection.connect().then(async (db) => {
     try {
@@ -42,13 +42,14 @@ export const GetAllChat = (req, res, next) => {
   })
 };
 
-export const GetChatByIdUser = (req, res, next) => {
-  const { id_User } = req.params;
-  
+export const GetChatById = (req, res, next) => {
+  const { id } = req.params;
+console.log('id',id);
+
   Connection.connect().then(async (db) => {
     try {
-      const chatByIdUser = await Chat.findByIdUser(db, id_User);
-      return res.status(200).json({ Chat: chatByIdUser });
+      const chatById = await Chat.findById(db, new ObjectId(id));
+      return res.status(200).json({ chatById: chatById });
     } catch (error) {
       console.log(error);
 
