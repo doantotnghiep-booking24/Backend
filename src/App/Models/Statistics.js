@@ -38,6 +38,8 @@ class Statistics {
           $project: {
             Created_at_Booking: { $toDate: "$Created_at_Booking" },
             Total_price: 1,
+            id_user: { $toObjectId: "$id_user" },
+            id_tour: { $toObjectId: "$id_tour" },
           },
         },
         {
@@ -50,13 +52,74 @@ class Statistics {
             },
             totalRevenuePerDay: { $sum: "$Total_price" },
             totalTicketsPerDay: { $sum: 1 },
+            userTourDetails: {
+              $push: {
+                id_user: "$id_user",
+                id_tour: "$id_tour",
+              },
+            },
           },
         },
-
-        { $sort: { _id: 1 } },
+        {
+          $lookup: {
+            from: "Users",
+            localField: "userTourDetails.id_user",
+            foreignField: "_id",
+            as: "userDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "Tours",
+            localField: "userTourDetails.id_tour",
+            foreignField: "_id",
+            as: "tourDetails",
+          },
+        },
+        {
+          $project: {
+            date: "$_id",
+            totalRevenuePerDay: 1,
+            totalTicketsPerDay: 1,
+            userTourDetails: {
+              $map: {
+                input: "$userTourDetails",
+                as: "item",
+                in: {
+                  user: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$userDetails",
+                          as: "user",
+                          cond: { $eq: ["$$user._id", "$$item.id_user"] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                  tour: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$tourDetails",
+                          as: "tour",
+                          cond: { $eq: ["$$tour._id", "$$item.id_tour"] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+        { $sort: { date: 1 } },
       ])
       .toArray();
   }
+
   static async getTotalAmountFromTickets(db) {
     const result = await db
       .collection("Tickets")
@@ -152,88 +215,6 @@ class Statistics {
             photoUrl: "$userDetails.photoUrl",
           },
         },
-      ])
-      .toArray();
-  }
-  static async getUsersByBookingDate(db) {
-    return db
-      .collection("Tickets")
-      .aggregate([
-        { $match: { isRequestCancel: false } },
-        {
-          $project: {
-            bookingDate: { $toDate: "$Created_at_Booking" },
-            id_user: 1,
-          },
-        },
-        {
-          $group: {
-            _id: {
-              $dateToString: { format: "%Y-%m-%d", date: "$bookingDate" },
-            },
-            users: { $addToSet: { $toObjectId: "$id_user" } },
-          },
-        },
-        {
-          $lookup: {
-            from: "Users",
-            localField: "users",
-            foreignField: "_id",
-            as: "userDetails",
-          },
-        },
-        {
-          $project: {
-            date: "$_id",
-            userDetails: {
-              username: "$userDetails.Name",
-              email: "$userDetails.Email",
-              photoUrl: "$userDetails.photoUrl",
-            },
-          },
-        },
-        { $sort: { date: 1 } },
-      ])
-      .toArray();
-  }
-
-  static async getToursByBookingDate(db) {
-    return db
-      .collection("Tickets")
-      .aggregate([
-        { $match: { isRequestCancel: false } },
-        {
-          $project: {
-            bookingDate: { $toDate: "$Created_at_Booking" },
-            id_tour: { $toObjectId: "$id_tour" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              $dateToString: { format: "%Y-%m-%d", date: "$bookingDate" },
-            },
-            tours: { $addToSet: "$id_tour" },
-          },
-        },
-        {
-          $lookup: {
-            from: "Tours",
-            localField: "tours",
-            foreignField: "_id",
-            as: "tourDetails",
-          },
-        },
-        {
-          $project: {
-            date: "$_id",
-            tourDetails: {
-              Name_Tour: "$tourDetails.Name_Tour",
-              Image_Tour: "$tourDetails.Image_Tour",
-            },
-          },
-        },
-        { $sort: { date: 1 } },
       ])
       .toArray();
   }
