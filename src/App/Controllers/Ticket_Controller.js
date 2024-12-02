@@ -270,14 +270,19 @@ class Ticket_Controller {
         }
     }
     CreateTicket(req, res, next) {
-        let { Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Status_Payment, Payment_Method } = req.body
+        let { Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, 
+            Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer,
+            id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Status_Payment, Payment_Method } = req.body
         let Created_at_Booking = new Date()
         let Status
         let isRequestCancel
         Price_Hotel = parseInt(Price_Hotel)
         Connection.connect().then(async (db) => {
             try {
-                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status = 'Tiếp nhận', Status_Payment, Payment_Method = null, isRequestCancel = false)
+                const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date,
+                     Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, 
+                     id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status = 'Tiếp nhận', 
+                     Status_Payment, Payment_Method = null, isRequestCancel = false)
                 const result = await Create.CreateTicket(db)
                 if (result) {
                     return res.status(200).send({ message: 'Created Success', ticKetId: result })
