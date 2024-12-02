@@ -56,13 +56,9 @@ class User_Controller {
         if (Email === "" || Password === "" || !isCheckEmail) {
             return res.status(404).send({ message: 'Please enter complete infomation' })
         }
-        console.log(Email, Password);
-
         Connection.connect().then(async (db) => {
             try {
                 const find_user = await User.Find_user(db, Email)
-
-
                 if (!find_user) {
                     return res.status('404').send({ message: 'Email not found' })
                 }

@@ -101,12 +101,8 @@ class Ticket {
             if (result_Find) {
                 return { result_Find }
             }
-
-            // return result_Find
-
         } catch (error) {
             console.log(error);
-
         }
     }
     static async UpdateTicket(db, id_ticket, id_Custommer, Status, Payment_Method) {

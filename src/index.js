@@ -61,7 +61,7 @@ Connection.connect().then(async (db) => {
 
 })
 Connection.connect().then(async (db) => {
-    const getVoucher = await db.collection('Voucher').find({}).toArray()
+    const getVoucher = await db.collection('Voucher').find({}).toArray()    
     const getTour = await db.collection('Tours').find({}).toArray()
 
 
