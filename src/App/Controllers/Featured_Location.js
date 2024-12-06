@@ -108,5 +108,17 @@ class Featured_Location {
             }
         })
     }
+
+    DetailLocation(req, res, next) {
+        const { id } = req.params
+        Connection.connect().then(async (db) => {
+            try {
+                const detailLocation = await Featured_Locations.Detail(db, new ObjectId(id))
+                if (detailLocation) return res.status(200).json({ detailLocation: detailLocation })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
 }
 export default new Featured_Location()
