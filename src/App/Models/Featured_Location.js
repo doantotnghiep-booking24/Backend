@@ -78,5 +78,12 @@ class Featured_Location {
             throw error
         }
     }
+
+    static async Detail(db, id) {
+        const resultDetail = await db.collection('Featured_Location')
+            .find({ _id: id })
+            .toArray()
+        return resultDetail
+    }
 }
 export default Featured_Location
