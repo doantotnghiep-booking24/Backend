@@ -61,7 +61,7 @@ Connection.connect().then(async (db) => {
 
 })
 Connection.connect().then(async (db) => {
-    const getVoucher = await db.collection('Voucher').find({}).toArray()    
+    const getVoucher = await db.collection('Voucher').find({}).toArray()
     const getTour = await db.collection('Tours').find({}).toArray()
 
 
@@ -99,7 +99,7 @@ Connection.connect().then(async (db) => {
     for (let i = 0; i < getTour.length; i++) {
         for (let j = 0; j < result.length; j++) {
             if (getTour[i].Price_Tour === result[j].Condition.Min_tour_value) {
-                
+
                 db.collection('Tours').updateOne(
                     { _id: { $in: [new ObjectId(getTour[i]._id)] } },
                     {
@@ -113,6 +113,35 @@ Connection.connect().then(async (db) => {
         }
     }
 })
+
+// Check time complete trip
+Connection.connect().then(async (db) => {
+    try {
+        const ticket = await db.collection('Tickets').find({}).toArray()
+        const resultTicket = ticket.filter(ticket => {
+            return ticket.Status_Payment === 'Đã Thanh Toán' && ticket.Status === 'Đã Xác Nhận'
+        })
+        for (let i = 0; i < resultTicket.length; i++) {
+            let StartDate = moment(resultTicket[i].Departure_Date)
+            const dayTotal = parseInt(resultTicket[i].Total_DateTrip.slice(0,1))
+            const endDate  = StartDate.clone().add(dayTotal - 1,'days')
+            const now = moment()
+            if(now.isAfter(endDate)){
+                const result = await db.collection('Tickets').updateOne(
+                    { _id: { $in: [new ObjectId(resultTicket[i]._id)] } },
+                    {
+                        $set: {
+                            Status : 'Đã Hoàn Thành'
+                        }
+                    }
+                )                  
+            }
+        }
+    } catch (error) {
+        throw error
+    }
+})
+
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // use cookie-parser to read cookies
