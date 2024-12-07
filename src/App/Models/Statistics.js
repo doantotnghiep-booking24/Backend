@@ -76,6 +76,49 @@ class Statistics {
             as: "tourDetails",
           },
         },
+        // Loại bỏ các user không tồn tại
+        {
+          $set: {
+            userTourDetails: {
+              $filter: {
+                input: "$userTourDetails",
+                as: "item",
+                cond: {
+                  $and: [
+                    {
+                      $gt: [
+                        {
+                          $size: {
+                            $filter: {
+                              input: "$userDetails",
+                              as: "user",
+                              cond: { $eq: ["$$user._id", "$$item.id_user"] },
+                            },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                    {
+                      $gt: [
+                        {
+                          $size: {
+                            $filter: {
+                              input: "$tourDetails",
+                              as: "tour",
+                              cond: { $eq: ["$$tour._id", "$$item.id_tour"] },
+                            },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
         {
           $project: {
             date: "$_id",
@@ -119,6 +162,7 @@ class Statistics {
       ])
       .toArray();
   }
+  
 
   static async getTotalAmountFromTickets(db) {
     const result = await db
