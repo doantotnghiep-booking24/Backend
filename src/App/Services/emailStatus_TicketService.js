@@ -12,38 +12,85 @@ const sendVerificationEmail = async (email, id_Ticket, Departure_Location, Desti
     })
 
     const mailOptions = {
-        from: '"DO AN TOT NGHIEP " <doantotnghiep24booking@gmail.com>',
-        to: email,
-        subject: 'Xác nhận vé thành công',
-        text: `Mã số vé của bạn là : ${id_Ticket}`,
-        html: `
-      <div style="font-family: Arial, sans-serif; text-align: center;">
-      <div style="text-align: center;" >
-      <h1>Welcome, ${email}!</h1>
-        <h4>Xác nhận vé thành công!!</h4>
-        <h4>Mã số vé của bạn là : ${id_Ticket}</h4>
-      </div>
-        <div>
-        <p>Điểm khởi hành : ${Departure_Location}</p>
-        <p>Điểm đến : ${Destination}</p> 
-        <p>Ngàykhởi hành : ${Departure_Date}</p>
-        <p>giờ khởi hành : ${Departure_Time}</p>
-        <p>Tổng Ngày đi : ${Total_DateTrip}</p>
-        <p>Giá người lớn : ${Adult_fare}</p>
-        <p>Giá Trẻ em : ${Children_fare}</p>
-        <p>Người lớn : ${Adult}</p>
-        <p>Trẻ em : ${Children}</p>
-        <p>Tổng giá : ${Total_price}</p><br>
-        <p>Nếu bạn Thắc mắc nào vui lòng liên hệ với email : doantotnghiep24booking@gmail.com </p>
-        </div>
-        <footer style="margin-top: 20px; color: #777;">
-          <p>Booking Travel</p>
-          <p>Your Website Team</p>
-        </footer>
-      </div>
-    `
-    }
-
+      from: '"DO AN TOT NGHIEP " <doantotnghiep24booking@gmail.com>',
+      to: email,
+      subject: 'Xác nhận vé thành công',
+      text: `Mã số vé của bạn là: ${id_Ticket}`,
+      html: `
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif;">
+          <tr>
+              <td align="center">
+                  <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                      <!-- Header -->
+                      <tr>
+                          <td align="center" style="background-color: #007bff; color: #ffffff; padding: 20px;">
+                              <h1 style="margin: 0; font-size: 28px;">Xác nhận vé thành công</h1>
+                          </td>
+                      </tr>
+                      <!-- Ticket Information -->
+                      <tr>
+                          <td style="padding: 30px; text-align: left; color: #333;">
+                              <p style="font-size: 16px; margin: 0 0 20px;">Chào bạn, <strong>${email}</strong>!</p>
+                              <p style="font-size: 16px; margin: 0 0 10px;">Mã số vé của bạn là: <strong>${id_Ticket}</strong></p>
+                              <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 20px; border-collapse: collapse;">
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Điểm khởi hành:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Departure_Location}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Điểm đến:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Destination}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Ngày khởi hành:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Departure_Date}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Giờ khởi hành:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Departure_Time}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Tổng ngày đi:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Total_DateTrip}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Giá người lớn:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Adult_fare}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Giá trẻ em:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Children_fare}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Người lớn:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Adult}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #ddd;">Trẻ em:</td>
+                                      <td style="padding: 10px; font-size: 16px; border-bottom: 1px solid #ddd;">${Children}</td>
+                                  </tr>
+                                  <tr>
+                                      <td style="padding: 10px; font-size: 16px; font-weight: bold;">Tổng giá:</td>
+                                      <td style="padding: 10px; font-size: 16px; color: #007bff; font-weight: bold;">${Total_price}</td>
+                                  </tr>
+                              </table>
+                              <p style="font-size: 14px; color: #555; margin-top: 20px; text-align: center">Nếu bạn có thắc mắc, vui lòng liên hệ qua email:<br> <strong>doantotnghiep24booking@gmail.com</strong></p>
+                          </td>
+                      </tr>
+                      <!-- Footer -->
+                      <tr>
+                          <td style="background-color: #f9f9f9; text-align: center; padding: 20px; border-top: 1px solid #ddd; color: #777;">
+                                                      <p style="margin: 0; font-size: 14px;">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>   
+                              <p style="margin: 0; font-size: 14px;">F5 Travel</p>
+                          </td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+      </table>
+      `
+  };
+  
 
     try {
         const info = await transporter.sendMail(mailOptions);

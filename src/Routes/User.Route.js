@@ -6,7 +6,7 @@ import uploadCloud from '../App/MiddleWare/Cloundinary.js'
 import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
 const Router = express.Router()
 Router.post('/Register', User_Controller.Register) //http://localhost:3001/V1/User/Register
-Router.post('/Login',  User_Controller.Login)
+Router.post('/Login', User_Controller.Login)
 Router.post('/RefreshToken', User_Controller.RefeshToken)
 Router.post('/Password-reset/request', User_Controller.PasswordResetRequest)//http://localhost:3001/User/Password-reset/request
 Router.post('/Password-reset/code', User_Controller.PasswordCode)//http://localhost:3001/User/Password-reset/code
