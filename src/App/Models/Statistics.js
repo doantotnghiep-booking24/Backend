@@ -5,7 +5,7 @@ class Statistics {
   }
 
   static async getTotalTickets(db) {
-    return db.collection("Tickets").countDocuments({ isRequestCancel: false });
+    return db.collection("Tickets").countDocuments({ isRequestCancel: false,Status_Payment: "Đã Thanh Toán"  });
   }
 
   static async getTotalNews(db) {
@@ -16,7 +16,12 @@ class Statistics {
     return db
       .collection("Tickets")
       .aggregate([
-        { $match: { isRequestCancel: false } },
+        { 
+          $match: { 
+            isRequestCancel: false, 
+            Status_Payment: "Đã Thanh Toán" 
+          } 
+        },
         {
           $project: {
             _id: 1,
@@ -33,7 +38,12 @@ class Statistics {
     return db
       .collection("Tickets")
       .aggregate([
-        { $match: { isRequestCancel: false } },
+        { 
+          $match: { 
+            isRequestCancel: false, 
+            Status_Payment: "Đã Thanh Toán" 
+          } 
+        },
         {
           $project: {
             Created_at_Booking: { $toDate: "$Created_at_Booking" },
@@ -42,6 +52,7 @@ class Statistics {
             id_tour: { $toObjectId: "$id_tour" },
           },
         },
+
         {
           $group: {
             _id: {
@@ -168,7 +179,12 @@ class Statistics {
     const result = await db
       .collection("Tickets")
       .aggregate([
-        { $match: { isRequestCancel: false } },
+        { 
+          $match: { 
+            isRequestCancel: false, 
+            Status_Payment: "Đã Thanh Toán" 
+          } 
+        },
         {
           $group: {
             _id: null,
@@ -177,8 +193,10 @@ class Statistics {
         },
       ])
       .toArray();
+    
     return result[0] ? result[0].totalAmount : 0;
   }
+  
   static async getTopRatedTours(db) {
     const topRatedTours = await db
       .collection("Tours")
@@ -197,7 +215,12 @@ class Statistics {
     return db
       .collection("Tickets")
       .aggregate([
-        { $match: { isRequestCancel: false } },
+        { 
+          $match: { 
+            isRequestCancel: false, 
+            Status_Payment: "Đã Thanh Toán" 
+          } 
+        },
         {
           $group: {
             _id: { $toObjectId: "$id_tour" },
@@ -205,7 +228,7 @@ class Statistics {
           },
         },
         { $sort: { bookingCount: -1 } },
-        { $limit: 3 },
+        { $limit: 4 },
         {
           $lookup: {
             from: "Tours",
@@ -234,7 +257,12 @@ class Statistics {
     return db
       .collection("Tickets")
       .aggregate([
-        { $match: { isRequestCancel: false } },
+        { 
+          $match: { 
+            isRequestCancel: false, 
+            Status_Payment: "Đã Thanh Toán" 
+          } 
+        },
         {
           $group: {
             _id: { $toObjectId: "$id_user" },
