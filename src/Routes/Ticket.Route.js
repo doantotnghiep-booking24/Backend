@@ -20,7 +20,7 @@ Router.get('/vnpay_return',Ticket_Controller.vnpay_return)
 Router.post('/refund',Ticket_Controller.Vnpay_refund)
 Router.post('/Vnpay_Query',Ticket_Controller.Vnpay_Query)
 // PAYMENT DIRECT
-Router.post('/Direct_PaymentTicket', AuthUser(["Admin", "User"]), Ticket_Controller.Direct_PaymentTicket)
+Router.post('/Direct_PaymentTicket', AuthUser(["Admin", "User", "Staff"]), Ticket_Controller.Direct_PaymentTicket)
 
 // Router.get('/vnpay_ipn',Ticket_Controller.vnpay_ipn)
 // Router.post('/UpdateService/:id',Service_Controller.UpdateService)

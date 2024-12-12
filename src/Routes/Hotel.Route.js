@@ -1,6 +1,7 @@
 import express from 'express'
 import Hotel_Controller from '../App/Controllers/Hotel_Controller.js'
 import uploadCloud from '../App/MiddleWare/Cloundinary.js'
+
 const Router = express.Router()
 Router.get('/GetHotel', Hotel_Controller.GetAllHotel) // http://localhost:3001/Hotel/GetHotel
 Router.post('/CreateHotel',uploadCloud.array('Image_Hotel'), Hotel_Controller.CreateHotel) // http://localhost:3001/Hotel/CreateHotel
