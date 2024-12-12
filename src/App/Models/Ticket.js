@@ -36,7 +36,7 @@ class Ticket {
         try {
             const result_GetTicket = await db.collection('Tickets')
                 .find({})
-                .sort({ Status: 1 })
+                .sort({Created_at_Booking : -1 })
                 .toArray()
             return result_GetTicket
         } catch (error) {
