@@ -32,7 +32,7 @@ class ReviewsController {
                 acc.count += 1;
                 acc[rating] = (acc[rating] || 0) + 1;
                 return acc;
-            }, { total: 0, count: 0 });
+            }, { total: 0, count: 0 })
 
             const weightedRating = (totalRatings.total / totalRatings.count) || 0; // Tránh chia cho 0
             const roundedRating = Math.round(weightedRating * 100) / 100;
@@ -45,7 +45,6 @@ class ReviewsController {
                 const firstComment = commentsForReview.length > 0 ? commentsForReview[0] : {};
                 // Lấy thông tin user dựa trên userId của review
                 const user = await User.GetUserById(db, new ObjectId(review.userId));
-
                 return {
                     _id: firstComment._id,
                     userName: user ? user.Name : "Anonymous",  // Thêm thông tin tên user
@@ -151,6 +150,20 @@ class ReviewsController {
         } catch (error) {
             console.log(error);
             return res.status(500).send({ message: "Internal Server Error" });
+        }
+    }
+
+
+
+    async fetchAllComment(req, res, next) {
+        try {
+            const db = await Connection.connect();
+            const commentsDetails = await Comments.getAllWithDetails(db);
+            console.log(commentsDetails); // Output all comments with tour and user info
+            res.json(commentsDetails); // Return comments to the client
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+            res.status(500).json({ error: "An error occurred while fetching comments." });
         }
     }
 }

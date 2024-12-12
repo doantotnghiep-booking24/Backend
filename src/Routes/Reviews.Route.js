@@ -7,7 +7,7 @@ import AuthUser from '../App/MiddleWare/Decentralization/AuthUser.js'
 const Router = express.Router()
 
 
-
+Router.get("/GetAllReview", Reviews_Controller.fetchAllComment) 
 Router.get('/GetReview/:id',  Reviews_Controller.GetAllReviews)  // Vd :  http://localhost:3001/V1/Review/GetReview
 
 Router.post('/AddNewReview', AuthUser(["Admin", "User", "Staff"]), uploadCloudComment.array('Image'), (req, res) => {

@@ -41,7 +41,7 @@ class Voucher_Controller {
         const { Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition } = req.body
         Connection.connect().then(async (db) => {
             try {
-                const UpdateVoucher = new Voucher(undefined, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition, isDeleted)
+                const UpdateVoucher = new Voucher(undefined, Code_Voucher, Description, Discount, Type, Start_Date, End_Date, Max_Usage, Condition)
                 const result = await UpdateVoucher.Update(db, new ObjectId(id))
                 if (result) return res.status(200).json({ message: 'Update Success' })
             } catch (error) {
