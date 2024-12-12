@@ -14,6 +14,7 @@ import Hotel from './Hotel.Route.js'
 import TourFavourite from './TourFavourite.Route.js'
 import Statistics from './Statistic.Route.js'
 import Chat from './Chat.Route.js'
+import TimeSchedules from './TimeSchedule.Route.js'
 const Route = (app) => {
     app.use('/V1/Review', Review)
     app.use('/V1/Tours', Tour)
@@ -31,6 +32,7 @@ const Route = (app) => {
     app.use('/Hotel',Hotel)
     app.use('/Statistics',Statistics)
     app.use('/Chat', Chat)
+    app.use('/TimeSchedules', TimeSchedules)
     app.use('/', Tour)
 }
 export default Route

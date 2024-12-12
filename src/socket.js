@@ -26,6 +26,10 @@ const setupSocket = (httpServer) => {
             if (!result) {
               const resultCreateChat = await Chat.createMessage(db, newMessage)
               console.log(resultCreateChat);
+              // Gửi thông báo tin nhắn đầu tiên
+              io.to(socket.id).emit('showFirstMessageNotice', {
+                message: 'Xin cảm ơn bạn đã liên hệ đến F5 Travel! Mọi thắc mắc sẽ được chúng tôi phản hồi trong vòng thời gian ngắn nhất!!',
+              });
               if (newMessage) {
                 io.emit('receiveMessage', newMessage)  // Phát tin nhắn tới client
                 callback({ status: 'success', messages: 'Message sent successfully' });
@@ -51,78 +55,8 @@ const setupSocket = (httpServer) => {
                 io.emit('receiveMessage', newMessage)  // Phát tin nhắn tới client
                 callback({ status: 'success', messages: 'Message sent successfully' });
               }
-
-              // for (let i = 0; i < newMessage.messages.length; i++) {
-              //   const updateChat = await db.collection('Chats').updateOne(
-              //     { _id: { $in: [result._id] } },
-              //     { $set: { "messages.$[elem].senderId": newMessage.messages[i].senderId, "messages.$[elem].receiverId": newMessage.messages[i].receiverId, "messages.$[elem].text": newMessage.messages[i].text, "messages.$[elem].time": newMessage.messages[i].time, "messages.$[elem].role": newMessage.messages[i].role } },
-              //     {
-              //       arrayFilters: [
-              //         { "elem.senderId": newMessage.messages[i].senderId }, // Thay 1 bằng index của object bạn muốn cập nhật
-              //         { "elem.receiverId": newMessage.messages[i].receiverId }
-              //       ]
-              //     }
-              //   )
-              //   console.log('updateChat', updateChat);
-              // }
             }
-            // console.log('newMessage',newMessage.messages[0].id_Room);
-            // const newIdroom = new ObjectId(newMessage.messages[0].id_Room)
-            // console.log('newIdroom',newIdroom);
 
-            // const findChat = result.some(chat => chat?._id === new ObjectId(newMessage.messages[0].id_Room))
-            // console.log('findChat', findChat);
-            // if (result.isBoolean) {
-            // const updateMessage = await db.collection('Chats').updateOne({
-            //   $and: [
-            //     { _id: result?.messages._id },
-            //     // { receiverId: newMessage.receiverId }
-            //   ]
-            // }, {
-            //   $push: {
-            //     message: {
-            //       id_Room : newMessage?.messages[0]?.id_Room ,
-            //       senderId: newMessage.senderId,
-            //       receiverId: newMessage.receiverId,
-            //       text: newMessage.messages[0].text,
-            //       time: new Date(),
-            //       role: newMessage.messages[0].role,
-            //     }
-            //   }
-            // })
-            //   console.log('updateMessage', updateMessage)
-            // } else {
-            //   // let room_id = 0
-            //   const savedMessage = await chat.createMessage(
-            //     newMessage.senderId,
-            //     newMessage.receiverId,
-            //     newMessage.messages, 
-
-            //   );
-
-            //   // Nếu tin nhắn được lưu thành công, gửi lại cho client
-            //   if (savedMessage) {
-            //     console.log('savedMessage', savedMessage);
-            //     let id_room = savedMessage._id
-            // for(let i = 0 ; i < newMessage.messages.length ; i++){
-            //   const updateChat = db.collection('Chats').updateOne(
-            //     { _id: { $in: [id_room] } },
-            //     { $set: { "message.$[elem].id_Room" : id_room } },
-            //     {
-            //       arrayFilters: [
-            //         { "elem._id": savedMessage[i] } // Thay 1 bằng index của object bạn muốn cập nhật
-            //       ]
-            //     }
-            //   )
-            //   console.log('updateChat',updateChat);
-            // }
-
-            //   io.emit('receiveMessage', newMessage)  // Phát tin nhắn tới client
-            //   callback({ status: 'success', messages: 'Message sent successfully' });
-            // } else {
-            //   callback({ status: 'error', error: 'Failed to save message' });
-            // }
-            // }
 
           } catch (error) {
 
