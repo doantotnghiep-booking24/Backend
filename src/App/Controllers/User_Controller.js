@@ -62,6 +62,8 @@ class User_Controller {
                 if (!find_user) {
                     return res.status('404').send({ message: 'Email not found' })
                 }
+                console.log('find_user',find_user);
+                
                 bcrypt.compare(Password, find_user.Password, (err, result) => {
                     if (err) {
                         console.log(err);
