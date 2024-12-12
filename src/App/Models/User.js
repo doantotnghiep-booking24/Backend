@@ -44,14 +44,14 @@ class User {
             console.log('error', error);
         }
     }
-    static async GetUserById(db, id) {
-        try {
-            return await db.collection('Users').findOne({ _id: id })
+        static async GetUserById(db, id) {
+            try {
+                return await db.collection('Users').findOne({ _id: id })
 
-        } catch (error) {
-            console.log('error', error);
+            } catch (error) {
+                console.log('error', error);
+            }
         }
-    }
 
     static async saveVerificationCode(db, email, code) {
         const expirationTime = new Date(Date.now() + 10 * 60 * 1000); // Thời gian hết hạn: 10 phút

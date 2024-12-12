@@ -54,6 +54,7 @@ class Voucher {
                         End_Date: this.End_Date,
                         Max_Usage: this.Max_Usage,
                         Condition: this.Condition,
+                        isDeleted :this.isDeleted
                     }
                 })
             return Update

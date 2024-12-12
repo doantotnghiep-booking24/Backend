@@ -5,6 +5,7 @@ import User from '../Models/User.js';
 import Reviews from '../Models/Review.js';
 import { ObjectId } from 'mongodb';
 import { v2 as cloudinary } from 'cloudinary';
+import censorReviewRegex from '../../utils/censorReviewRegex.js';
 class Tour_Controller {
     Create_Tour(req, res, next) {
         let Data_Image = []
@@ -202,7 +203,7 @@ class Tour_Controller {
                     likes: firstComment.likes,
                     dislikes: firstComment.dislikes,
                     Image: commentsForReview.map(comment => comment.Image).flat(),
-                    content: commentsForReview.length > 0 ? commentsForReview[0].content : null,
+                    content: commentsForReview.length > 0 ? censorReviewRegex(commentsForReview[0].content)  : null,
                     Create_At: review.Created_At,
                 };
             }));

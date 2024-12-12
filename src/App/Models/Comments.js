@@ -26,6 +26,19 @@ class Comments {
         }
     }
 
+   
+
+    static async getAllWithDetails(db) {
+        try {
+            const result = await db.collection(NAME_COLLECTION)
+                .find({ })
+                .toArray()
+            return result
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
 
     async Create(db) {
         try {
