@@ -221,6 +221,7 @@ class Statistics {
             tourId: "$_id",
             Name_Tour: "$tourDetails.Name_Tour",
             Image_Tour: "$tourDetails.Image_Tour",
+            Image_Tour: "$tourDetails.Price_Tour",
             bookingCount: 1,
           },
         },
