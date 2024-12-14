@@ -6,6 +6,7 @@ Router.get('/GetAllTicket',Ticket_Controller.GetAllTicket)
 Router.post('/Update_StatusTickets',Ticket_Controller.Update_StatusTickets)
 Router.post('/Update_StatusCancelTicketsByClient/:id',Ticket_Controller.Update_StatusCancelTicketsByClient)
 Router.post('/ConfirmCancleTicket/:id',Ticket_Controller.HandleConfirmCancleTicket)
+Router.post('/DeleteTicket/:id',Ticket_Controller.HandleDeleteTicket)
 
 // ZALOPAY
 Router.post('/PaymentZalopay',Ticket_Controller.PaymentWithZalopay)
@@ -14,6 +15,7 @@ Router.post('/TicketStatus/:app_trans_id',Ticket_Controller.TicketStatus)
 Router.post('/CreateTicket',Ticket_Controller.CreateTicket)
 Router.post('/FindTicket/:id',Ticket_Controller.FindTicket)
 Router.post('/Refund_PaymenZalo',Ticket_Controller.Refund_PaymenZalo)
+Router.post('/queryRefunc',Ticket_Controller.queryRefunc)
 // VNPAY
 Router.post('/create_payment_url',Ticket_Controller.create_payment_url)
 Router.get('/vnpay_return',Ticket_Controller.vnpay_return)
