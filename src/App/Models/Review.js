@@ -1,12 +1,13 @@
 import { v2 as cloudinary } from 'cloudinary';
 const NAME_COLLECTION = "Reviews"
 class Review {
-    constructor(_id, userId, tourId, rating, Created_At) {
+    constructor(_id, userId, tourId, rating, Created_At, isDeleted = false) {
         this._id = _id
         this.userId = userId
         this.tourId = tourId
         this.rating = rating
         this.Created_At = Created_At
+        this.isDeleted =isDeleted
     }
 
     static async getAll(db, dbTourId) {
