@@ -9,14 +9,13 @@ import { engine } from 'express-handlebars';
 import setupSocket from './socket.js';
 import { createServer } from 'http';
 import { corsOptions } from './Config/cors.js';
-const app = express()
-// console.log('123');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import 'dotenv/config'
 
-// app.use(cors({
-//     origin: "*",
-//     credentials: true,
-//     exposedHeaders: ['Authorization']
-// }))
+const app = express()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(cors(corsOptions))
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -25,8 +24,17 @@ app.use(cookieParser()); // use cookie-parser to read cookies
 app.engine('handlebars', engine({}));
 app.set('view engine', 'handlebars');
 app.set('views', './src/views');
-
 Route(app)
+app.use(express.static(path.join(__dirname, '../client/dist')))
+app.use(express.static(path.join(__dirname, '../admin/dist')));
+app.get("/client/*", (req, res) => {
+    res.sendFile(path.join(__dirname, '../client', 'index.html'))
+})
+
+app.get("/admin/*", (req, res) => {
+    res.sendFile(path.join(__dirname, '../admin', 'index.html'))
+})
+
 const currentDate = new Date();
 const year = currentDate.getFullYear()
 const month = currentDate.getMonth() + 1
@@ -149,8 +157,10 @@ app.use(cookieParser()); // use cookie-parser to read cookies
 const httpServer = createServer(app);
 const io = setupSocket(httpServer);
 app.set('io', io);
-Route(app)
 
-httpServer.listen(3001)
+
+httpServer.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+})
 export { io }
 
