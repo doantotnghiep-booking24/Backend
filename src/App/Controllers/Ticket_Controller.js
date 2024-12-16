@@ -33,6 +33,19 @@ class Ticket_Controller {
             }
         })
     }
+    HandleDeleteTicket(req, res, next) {
+        const { id } = req.params
+        console.log(id);
+        
+        Connection.connect().then(async (db) => {
+            try {
+                const DeleteTicket = Ticket.DeleteTicket(db, new ObjectId(id))
+                if (DeleteTicket) return res.status(200).json({ message: 'Delete Success' })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    }
     Update_StatusTickets(req, res, next) {
         const { Status, id_Ticket, id_Custommer } = req.body
         Connection.connect().then(async (db) => {
@@ -143,13 +156,13 @@ class Ticket_Controller {
             description: `Zalo - Payment for the ticket #${transID}`,
             title: 'Thông tin Tour',
             bank_code: "",
-            callback_url: 'https://c9cd-116-105-208-12.ngrok-free.app/Ticket/Callback'
+            callback_url: 'https://8e54-116-98-173-176.ngrok-free.app/Ticket/Callback'
         };
 
         // appid|app_trans_id|appuser|amount|apptime|embeddata|item
         const data = config.app_id + "|" + ticket.app_trans_id + "|" + ticket.app_user + "|" + ticket.amount + "|" + ticket.app_time + "|" + ticket.embed_data + "|" + ticket.item;
         ticket.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
-        // console.log(data);
+        console.log(data);
 
         try {
             const result = await axios.post(config.endpoint, null, { params: ticket })
@@ -184,10 +197,10 @@ class Ticket_Controller {
 
                 console.log("update ticket's status = success where app_trans_id =", dataJson["app_trans_id"]);
                 const data = JSON.parse(dataJson.item)
-                // console.log('data', data);
+                console.log('data', data);
 
                 const id_Ticket = data[0].id_Ticket
-                // console.log(data[0]);
+                console.log(data[0]);
 
                 Connection.connect().then(async (db) => {
                     if (id_Custommer) {
@@ -216,8 +229,8 @@ class Ticket_Controller {
         };
         const timestamp = Date.now();
         const uid = `${timestamp}${Math.floor(111 + Math.random() * 999)}`; // unique id
-        const amount = parseInt(req.body.amount)
-        const zp_trans_id = req.body.zp_trans_id
+        const amount = '1455000'
+        const zp_trans_id = '241214000001807'
 
         let params = {
             app_id: config.app_id,
@@ -239,6 +252,28 @@ class Ticket_Controller {
         } catch (error) {
             res.status(400).send({ Message: error })
         }
+    }
+    async queryRefunc(req, res, next) {
+
+        const config = {
+            app_id: "2553",
+            key1: "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
+            key2: "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz",
+            endpoint: "https://sb-openapi.zalopay.vn/v2/query_refund"
+        };
+
+        const params = {
+            app_id: config.app_id,
+            timestamp: Date.now(), // miliseconds
+            m_refund_id: "241213_2554_1734077219950785",
+        };
+
+        const data = config.app_id + "|" + params.m_refund_id + "|" + params.timestamp; // app_id|m_refund_id|timestamp
+        params.mac = CryptoJS.HmacSHA256(data, config.key1).toString()
+
+        axios.post(config.endpoint, null, { params })
+            .then(res => console.log(res.data))
+            .catch(err => console.log(err));
     }
     async TicketStatus(req, res, next) {
         const { app_trans_id } = req.params
@@ -270,7 +305,7 @@ class Ticket_Controller {
         }
     }
     CreateTicket(req, res, next) {
-        let { Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time, 
+        let { Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date, Departure_Time,
             Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, id_Custommer,
             id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Status_Payment, Payment_Method } = req.body
         let Created_at_Booking = new Date()
@@ -280,9 +315,9 @@ class Ticket_Controller {
         Connection.connect().then(async (db) => {
             try {
                 const Create = new Ticket(undefined, Departure_Location, Destination, Title_Tour, Price_Tour, After_Discount, Departure_Date,
-                     Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service, 
-                     id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status = 'Tiếp nhận', 
-                     Status_Payment, Payment_Method = null, isRequestCancel = false)
+                    Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Children, Total_price, id_tour, id_user, id_Service,
+                    id_Custommer, id_Voucher, id_Hotel, Name_Hotel, Price_Hotel, Number_Of_Hotel, Created_at_Booking, Status = 'Tiếp nhận',
+                    Status_Payment, Payment_Method = null, isRequestCancel = false)
                 const result = await Create.CreateTicket(db)
                 if (result) {
                     return res.status(200).send({ message: 'Created Success', ticKetId: result })

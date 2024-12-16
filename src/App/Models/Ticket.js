@@ -141,15 +141,15 @@ class Ticket {
             throw error
         }
     }
-    // static async DeleteTicket(db, id) {
-    //     try {
-    //         const reuslt_Delete = await db.collection('Tickets')
-    //             .deleteOne({ _id: id })
-    //         return reuslt_Delete
-    //     } catch (error) {
-    //         console.log(error);
-    //         throw error
-    //     }
-    // }
+    static async DeleteTicket(db, id) {
+        try {
+            const reuslt_Delete = await db.collection('Tickets')
+                .deleteOne({ _id: id })
+            return reuslt_Delete
+        } catch (error) {
+            console.log(error);
+            throw error
+        }
+    }
 }
 export default Ticket
