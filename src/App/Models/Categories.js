@@ -1,7 +1,8 @@
 class Categories {
-    constructor(_id, Name_Cate) {
+    constructor(_id, Name_Cate, isDeleted = false) {
         this._id = _id
         this.Name_Cate = Name_Cate
+        this.isDeleted = isDeleted
     }
     static async getAll(db) {
         try {

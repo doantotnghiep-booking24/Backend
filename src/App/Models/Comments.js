@@ -2,7 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { ObjectId } from 'mongodb';
 const NAME_COLLECTION = "Comments"
 class Comments {
-    constructor(_id, userId, tourId, Image, content, idRating, likes = [], dislikes = [], Created_At) {
+    constructor(_id, userId, tourId, Image, content, idRating, likes = [], dislikes = [], Created_At, isDeleted = false) {
         this._id = _id
         this.userId = userId
         this.tourId = tourId
@@ -12,6 +12,7 @@ class Comments {
         this.likes = likes
         this.dislikes = dislikes
         this.Created_At = Created_At
+        this.isDeleted = isDeleted
     }
 
     static async getAll(db, id) {
@@ -40,6 +41,47 @@ class Comments {
         }
     }
 
+    static async remoteComment(db, id) {
+
+        try {
+         
+            
+            const findIsDeleted = await db.collection(NAME_COLLECTION).findOne({ _id: new ObjectId(id) });
+
+            if (!findIsDeleted) {
+                throw new Error("Document not found");
+            }
+
+            let Result_Update;
+
+
+            if (findIsDeleted.isDeleted) {
+                console.log("is deleted delete",findIsDeleted.isDeleted);
+                
+                // Khôi phục nếu isDeleted là true
+                await db.collection(NAME_COLLECTION).updateOne(
+                    { _id: new ObjectId(id) },
+                    { $set: { isDeleted: false } }
+                );
+                Result_Update =  await db.collection(NAME_COLLECTION).findOne({ _id: new ObjectId(id) });
+                console.log("Document restored");
+            } else {
+               
+                // Đánh dấu là đã xóa nếu isDeleted là false
+                 await db.collection(NAME_COLLECTION).updateOne(
+                    { _id: new ObjectId(id)},
+                    { $set: { isDeleted : true } }
+                );
+                Result_Update =  await db.collection(NAME_COLLECTION).findOne({ _id: new ObjectId(id) });
+                console.log(findIsDeleted.isDeleted);
+            }
+
+            return Result_Update;
+        } catch (error) {
+            console.log(error);
+            throw (error)
+        }
+    }
     async Create(db) {
         try {
             const Create_News = db.collection(NAME_COLLECTION).insertOne(this)
