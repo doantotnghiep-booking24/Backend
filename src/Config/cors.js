@@ -1,4 +1,4 @@
-const whitelist = ['http://localhost:5173', 'http://localhost:5174', 'https://bookingtravel-44jm.onrender.com', 'https://datn-2024-mern-k5onqkddn-tranquocduong204s-projects.vercel.app', 'http://localhost:3000', 'http://localhost:30011']
+const whitelist = ['http://localhost:5173', 'http://localhost:5174', 'https://frontend-booking-ovf1.onrender.com/', 'https://datn-2024-mern-k5onqkddn-tranquocduong204s-projects.vercel.app', 'http://localhost:3000', 'http://localhost:30011']
 
 export const corsOptions = {
     origin: function (origin, callback) {
