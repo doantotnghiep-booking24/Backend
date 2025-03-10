@@ -5,6 +5,7 @@ const AuthUser = (permissions) => {
     return async (req, res, next) => {
         try {
             const originPort = req.headers.origin.split(':').pop();
+            console.log(originPort)
             const cookieName = originPort === '5173' ? 'auth' : 'authAdmin';
             const user = req.cookies[cookieName];
 console.log(user);
