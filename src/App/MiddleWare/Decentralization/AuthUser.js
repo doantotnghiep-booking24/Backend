@@ -5,7 +5,7 @@ const AuthUser = (permissions) => {
     return async (req, res, next) => {
         try {
             const originPort = req.headers.origin
-            const cookieName = originPort ? 'auth' : 'authAdmin';
+            const cookieName = originPort === 'https://frontend-booking-ovf1.onrender.com' ? 'auth' : 'authAdmin';
             const user = req.cookies[cookieName];
 console.log(user);
 
