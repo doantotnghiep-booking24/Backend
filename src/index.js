@@ -159,7 +159,7 @@ const io = setupSocket(httpServer);
 app.set('io', io);
 
 
-httpServer.listen(process.env.PORT, () => {
+httpServer.listen(process.env.PORT || 3001, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 })
 export { io }
