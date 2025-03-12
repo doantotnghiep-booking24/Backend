@@ -105,7 +105,7 @@ class Ticket_Controller {
     }
     async PaymentWithZalopay(req, res, next) {
         const embed_data = {
-            redirecturl: 'http://localhost:5173/booking-history'
+            redirecturl: 'https://frontend-booking-ovf1.onrender.com/booking-history'
         };
         const { total_Price, Destination, Title_Tour, Departure_Date, Departure_Time, Total_DateTrip, Adult_fare, Children_fare, Adult, Total_price, id_tour, id_user, id_Service, id_Voucher, id_Ticket, Create_by, Name_Custommer, Date_Of_Birth, Sex_Custommer, Phone_Number, Citizen_Identification, Address } = req.body
         const Ticket_tour = [{
@@ -156,7 +156,7 @@ class Ticket_Controller {
             description: `Zalo - Payment for the ticket #${transID}`,
             title: 'Thông tin Tour',
             bank_code: "",
-            callback_url: 'https://8e54-116-98-173-176.ngrok-free.app/Ticket/Callback'
+            callback_url: 'https://bookingtravel-44jm.onrender.com/Ticket/Callback'
         };
 
         // appid|app_trans_id|appuser|amount|apptime|embeddata|item
