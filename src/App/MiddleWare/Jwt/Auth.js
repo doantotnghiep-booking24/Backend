@@ -53,9 +53,9 @@ class Auth {
       console.log(`Token from Header: ${token}`);
     }
 
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" }); // Nếu không có token, trả về lỗi Unauthorized
-    }
+    // if (!token) {
+    //   return res.status(401).json({ message: "Unauthorized" }); // Nếu không có token, trả về lỗi Unauthorized
+    // }
 
     // Kiểm tra tính hợp lệ của token
     jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN, (err, decoded) => {
