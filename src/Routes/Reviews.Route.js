@@ -10,7 +10,7 @@ const Router = express.Router()
 Router.get("/GetAllReview", Reviews_Controller.fetchAllComment) 
 Router.get('/GetReview/:id',  Reviews_Controller.GetAllReviews)  // Vd :  http://localhost:3001/V1/Review/GetReview
 Router.post('/GetReview/:id', Auth.verifyJWTToken, AuthUser(["Admin", "User", "Staff"]), Reviews_Controller.remoteComment)
-Router.post('/AddNewReview',Auth.verifyJWTToken, AuthUser(["Admin", "User", "Staff"]), uploadCloudComment.array('Image'), (req, res) => {
+Router.post('/AddNewReview', AuthUser(["Admin", "User", "Staff"]), uploadCloudComment.array('Image'), (req, res) => {
     req.io = req.app.get('io'); // Lấy io từ app
     Reviews_Controller.CreateNew(req, res);
 });  // Vd :  http://localhost:3001/V1/Review/AddNewReview
