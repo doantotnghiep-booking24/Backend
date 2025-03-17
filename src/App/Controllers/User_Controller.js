@@ -201,7 +201,7 @@ class User_Controller {
                 const result = await User.saveVerificationCode(db, email, code);
 
 
-                await emailService.sendVerificationEmail(email, code);
+               const results = await emailService.sendVerificationEmail(email, code);
 
 
                 res.status(200).json({ user });
