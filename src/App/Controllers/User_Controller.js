@@ -185,29 +185,32 @@ class User_Controller {
   }
 
   PasswordResetRequest = async (req, res) => {
-    const { email } = req.body;
+        const { email } = req.body;
 
-    if (!email) return res.status(400).json({ message: "Email are required" });
+        if (!email) return res.status(400).json({ message: 'Email are required' });
 
-    Connection.connect().then(async (db) => {
-      try {
-        const user = await User.Find_user(db, email);
+        Connection.connect().then(async (db) => {
+            try {
+                const user = await User.Find_user(db, email);
 
-        if (!user) throw new Error("Email not found");
+                if (!user) throw new Error('Email not found');
 
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const result = await User.saveVerificationCode(db, email, code);
 
-        await emailService.sendVerificationEmail(email, code);
+                const result = await User.saveVerificationCode(db, email, code);
 
-        res.status(200).json({ user });
-      } catch (error) {
-        console.error("Error occurred:", error); // Log lỗi chi tiết
-        res.status(500).json({ error: 'Internal Server Error' }); // Sử dụng mã trạng thái 500 cho lỗi nội bộ
-      }
-    });
-  };
+
+                await emailService.sendVerificationEmail(email, code);
+
+
+                res.status(200).json({ user });
+            } catch (error) {
+                console.error("Error occurred:", error); // Log lỗi chi tiết
+                res.status(500).json({ error: 'Internal Server Error' }); // Sử dụng mã trạng thái 500 cho lỗi nội bộ
+            }
+        });
+    };
 
   PasswordCode = async (req, res) => {
     const { code, newPassword } = req.body;
