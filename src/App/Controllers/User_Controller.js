@@ -204,7 +204,7 @@ class User_Controller {
         res.status(200).json({ user });
       } catch (error) {
         console.error("Error occurred:", error); // Log lỗi chi tiết
-        res.status(500).json({ error: error }); // Sử dụng mã trạng thái 500 cho lỗi nội bộ
+        res.status(500).json({ error: 'Internal Server Error' }); // Sử dụng mã trạng thái 500 cho lỗi nội bộ
       }
     });
   };
