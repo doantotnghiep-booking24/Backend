@@ -369,7 +369,7 @@ class Ticket_Controller {
         let tmnCode = 'K0OW2EW2'
         let secretKey = 'E3CXY1RMHAWX42E8EKJZRPUPTPX8O31M'
         let vnpUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'
-        let returnUrl = 'http://localhost:3001/Ticket/vnpay_return'
+        let returnUrl = 'https://bookingtravel-44jm.onrender.com/Ticket/vnpay_return'
 
         let orderId = req.body.ticket_id
         let amount = req.body.amount;
